@@ -3,7 +3,7 @@ package com.shwimping.be.place.repository.init;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import com.shwimping.be.global.util.DummyDataInit;
-import com.shwimping.be.place.domain.mongodb.MongoPlace;
+import com.shwimping.be.place.domain.MongoPlace;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.repository.MongoPlaceRepository;
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ public class MongoPlaceInitializer implements ApplicationRunner {
         }
     }
 
-    private void importCsvToMongo(String filePath, int addressIndex, int latitudeIndex, int longitudeIndex,
+    private void importCsvToMongo(String filePath, int addressIndex, int longitudeIndex , int latitudeIndex,
                                   Category category) {
         try (Reader reader = new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8)) {
             CSVReader csvReader = new CSVReader(reader);

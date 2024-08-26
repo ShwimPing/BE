@@ -1,4 +1,4 @@
-package com.shwimping.be.place.domain.mongodb;
+package com.shwimping.be.place.domain;
 
 import com.shwimping.be.place.domain.type.Category;
 import lombok.AccessLevel;
