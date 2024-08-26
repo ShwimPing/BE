@@ -22,7 +22,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 @RequiredArgsConstructor
 @Order(1)
 @DummyDataInit
-public class MongoShelterInitializer implements ApplicationRunner {
+public class MongoPlaceInitializer implements ApplicationRunner {
 
     private final MongoPlaceRepository mongoPlaceRepository;
 
