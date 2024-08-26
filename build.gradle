@@ -49,6 +49,9 @@ dependencies {
 	//mongodb
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+	//csv 파일
+	implementation 'com.opencsv:opencsv:5.5.2'
+
 	//OpenFeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
