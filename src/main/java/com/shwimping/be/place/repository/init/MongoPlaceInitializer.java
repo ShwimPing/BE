@@ -32,8 +32,9 @@ public class MongoPlaceInitializer implements ApplicationRunner {
             log.info("[MongoPlace]더미 데이터 존재");
         } else {
             importCsvToMongo("src/main/resources/data/기후동행쉼터.csv", 4, 9, 10, Category.TOGETHER);
+            importCsvToMongo("src/main/resources/data/도서관 쉼터.csv", 6, 7, 8, Category.LIBRARY);
+            importCsvToMongo("src/main/resources/data/서울시 무더위쉼터.csv", 3, 7, 8, Category.HOT);
             importCsvToMongo("src/main/resources/data/서울시 한파쉼터.csv", 2, 9, 10, Category.COLD);
-            importCsvToMongo("src/main/resources/data/서울시 무더위쉼터.csv", 3, 8, 9, Category.HOT);
             importCsvToMongo("src/main/resources/data/스마트쉼터 현황.csv", 4, 6, 7, Category.SMART);
         }
     }
