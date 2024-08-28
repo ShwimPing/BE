@@ -17,8 +17,9 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createUser(CreateUserRequest request) {
+    public User createUser(CreateUserRequest request) {
         User user = request.toUser();
         userRepository.save(user);
+        return user;
     }
 }

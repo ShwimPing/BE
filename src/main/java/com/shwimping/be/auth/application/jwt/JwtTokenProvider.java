@@ -1,7 +1,7 @@
 package com.shwimping.be.auth.application.jwt;
 
 import com.shwimping.be.auth.application.jwt.type.JwtValidationType;
-import com.shwimping.be.user.domain.User;
+import com.shwimping.be.user.domain.type.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -27,16 +27,16 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public Tokens generateToken(User user) {
-        return new Tokens(createToken(user, jwtProperties.getAccessTokenExpiration()),
-                createToken(user, jwtProperties.getRefreshTokenExpiration()));
+    public Tokens generateToken(JwtUserDetails jwtUserDetails) {
+        return new Tokens(createToken(jwtUserDetails, jwtProperties.getAccessTokenExpiration()),
+                createToken(jwtUserDetails, jwtProperties.getRefreshTokenExpiration()));
     }
 
-    public String createToken(User user, Long expireTime) {
+    public String createToken(JwtUserDetails jwtUserDetails, Long expireTime) {
         final Date now = new Date();
 
         final Claims claims = Jwts.claims()
-                .setSubject(user.getId().toString())
+                .setSubject(jwtUserDetails.userId().toString())
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expireTime));
@@ -64,10 +64,6 @@ public class JwtTokenProvider {
     }
 
     private Claims getClaims(String token) {
-        if (token.contains("Bearer ")) {
-            token = token.substring("Bearer ".length());
-        }
-
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -75,7 +71,11 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    public Long getUserIdFromJwt(String token) {
-        return Long.valueOf(getClaims(token).getId());
+    public JwtUserDetails getJwtUserDetails(String token) {
+        Claims claims = getClaims(token);
+        return JwtUserDetails.builder()
+                .userId(Long.valueOf(claims.getSubject()))
+                .role((Role) claims.get("role"))
+                .build();
     }
 }
