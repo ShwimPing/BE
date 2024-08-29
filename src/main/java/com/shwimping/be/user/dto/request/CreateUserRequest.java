@@ -11,10 +11,10 @@ public record CreateUserRequest(
     String password,
     String fcmToken
 ) {
-    public User toUser() {
+    public User toUser(String encodedPassword) {
         return User.builder()
                 .email(email)
-                .password(password)
+                .password(encodedPassword)
                 .fcmToken(fcmToken)
                 .provider(SELF)
                 .nickname("temporal")
