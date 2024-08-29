@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -27,14 +28,19 @@ public class MongoPlace {
     @Field(name = "address")
     private String address;
 
-    @Field(name = "location")
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    @Field(name = "location")
     private GeoJsonPoint location;
 
+    @Indexed(unique = true)
+    @Field(name = "placeId")
+    private Long placeId;
+
     @Builder
-    public MongoPlace(Category category, String address, GeoJsonPoint location) {
+    public MongoPlace(Category category, String address, GeoJsonPoint location, Long placeId) {
         this.category = category;
         this.address = address;
         this.location = location;
+        this.placeId = placeId;
     }
 }

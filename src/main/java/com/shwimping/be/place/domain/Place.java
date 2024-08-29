@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.geo.Point;
 
 @Table(name = "place")
 @Getter
@@ -45,14 +46,22 @@ public class Place {
     @Column(name = "close_time", nullable = false)
     private LocalTime closeTime;
 
+    @Column(name = "rest_info", nullable = false)
+    private String restInfo;
+
+    @Column(name = "location", nullable = false)
+    private Point location;
+
     @Builder
-    public Place(String name, String region, Category category, String address, LocalTime openTime,
-                 LocalTime closeTime) {
+    public Place(String name, String region, Category category, String address, LocalTime openTime, LocalTime closeTime,
+                 String restInfo, Point location) {
         this.name = name;
         this.region = region;
         this.category = category;
         this.address = address;
         this.openTime = openTime;
         this.closeTime = closeTime;
+        this.restInfo = restInfo;
+        this.location = location;
     }
 }
