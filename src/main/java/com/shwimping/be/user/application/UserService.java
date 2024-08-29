@@ -19,10 +19,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User createUser(CreateUserRequest request) {
+    public void createUser(CreateUserRequest request) {
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = request.toUser(encodedPassword);
         userRepository.save(user);
-        return user;
     }
 }
