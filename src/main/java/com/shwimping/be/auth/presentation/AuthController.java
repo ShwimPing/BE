@@ -5,6 +5,7 @@ import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,8 @@ public class AuthController {
 
     @Operation(summary = "소셜 로그인 없는 회원가입", description = "일반 회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<ResponseTemplate<Object>> signUp(@RequestBody CreateUserRequest request) {
-        log.info("[AuthController.signUp]");
-
+    public ResponseEntity<ResponseTemplate<Object>> signUp(@Valid @RequestBody CreateUserRequest request) {
+        
         LoginResponse response = authService.signUp(request);
 
         return ResponseEntity

@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "jwt")
 @Getter
 @AllArgsConstructor
+@ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
     private String secretKey;
     private String issuer;
