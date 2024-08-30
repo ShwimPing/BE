@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 public enum UserErrorCode implements ErrorCode {
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
-    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Invalid Password")
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Invalid Password"),
+    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "Already exist Email"),
     ;
 
     private final HttpStatus httpStatus;

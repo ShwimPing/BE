@@ -10,8 +10,6 @@ import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.exception.InvalidPasswordException;
-import com.shwimping.be.user.exception.UserNotFoundException;
-import com.shwimping.be.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,22 +19,18 @@ import org.springframework.stereotype.Service;
 import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_TOKEN;
 import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID_JWT;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_PASSWORD;
-import static com.shwimping.be.user.exception.errorcode.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
-    private final UserRepository userRepository;
 
     public JwtUserDetails getJwtUserDetails(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-
+        User user = userService.getUserById(userId);
         return JwtUserDetails.from(user);
     }
 
@@ -45,15 +39,14 @@ public class AuthService {
     }
 
     public LoginResponse selfLogin(LoginRequest request, HttpServletResponse response) {
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+        User user = userService.getUserByEmail(request.email());
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new InvalidPasswordException(INVALID_PASSWORD);
         }
 
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
-        response.setHeader("refresh-token", tokens.refreshToken());
+        response.setHeader("Refresh-Token", tokens.refreshToken());
 
         return LoginResponse.from(tokens);
     }
