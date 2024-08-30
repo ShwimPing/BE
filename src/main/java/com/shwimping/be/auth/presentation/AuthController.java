@@ -6,6 +6,7 @@ import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
 
+@Tag(name = "Auth", description = "Auth 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
