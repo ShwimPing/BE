@@ -49,4 +49,8 @@ public class AuthService {
 
         return LoginResponse.of(jwtTokenProvider.generateToken(getJwtUserDetails(user.getId())));
     }
+
+    public String getTestToken(Long userId) {
+        return jwtTokenProvider.generateToken(getJwtUserDetails(userId)).accessToken();
+    }
 }

@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
 
@@ -46,5 +43,11 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseTemplate.from(response));
+    }
+
+    @Operation(summary = "테스트용 토큰발급", description = "테스트용 토큰발급")
+    @GetMapping("/test-token")
+    public String testToken(@RequestParam Long userId) {
+        return authService.getTestToken(userId);
     }
 }
