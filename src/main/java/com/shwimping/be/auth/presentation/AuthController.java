@@ -6,6 +6,7 @@ import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +37,15 @@ public class AuthController {
 
     @Operation(summary = "자체 로그인", description = "소셜 로그인 없는 자체 로그인")
     @PostMapping("/login")
-    public ResponseEntity<ResponseTemplate<Object>> selfLogin(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<ResponseTemplate<Object>> selfLogin(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletResponse response) {
 
-        LoginResponse response = authService.selfLogin(request);
+        LoginResponse loginResponse = authService.selfLogin(request, response);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseTemplate.from(response));
+                .body(ResponseTemplate.from(loginResponse));
     }
 
     @Operation(summary = "테스트용 토큰발급", description = "테스트용 토큰발급")

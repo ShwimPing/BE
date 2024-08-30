@@ -2,6 +2,7 @@ package com.shwimping.be.auth.application;
 
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
+import com.shwimping.be.auth.application.jwt.Tokens;
 import com.shwimping.be.auth.dto.request.LoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.user.application.UserService;
@@ -10,6 +11,7 @@ import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.exception.InvalidPasswordException;
 import com.shwimping.be.user.exception.UserNotFoundException;
 import com.shwimping.be.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +41,7 @@ public class AuthService {
         userService.createUser(request);
     }
 
-    public LoginResponse selfLogin(LoginRequest request) {
+    public LoginResponse selfLogin(LoginRequest request, HttpServletResponse response) {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
@@ -47,7 +49,10 @@ public class AuthService {
             throw new InvalidPasswordException(INVALID_PASSWORD);
         }
 
-        return LoginResponse.of(jwtTokenProvider.generateToken(getJwtUserDetails(user.getId())));
+        Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
+        response.setHeader("refresh-token", tokens.refreshToken());
+
+        return LoginResponse.of(tokens);
     }
 
     public String getTestToken(Long userId) {

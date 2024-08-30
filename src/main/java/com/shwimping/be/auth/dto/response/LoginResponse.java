@@ -5,13 +5,11 @@ import lombok.Builder;
 
 @Builder
 public record LoginResponse(
-        String accessToken,
-        String refreshToken
+        String accessToken
 ) {
     public static LoginResponse of(Tokens token) {
         return LoginResponse.builder()
                 .accessToken(token.accessToken())
-                .refreshToken(token.refreshToken())
                 .build();
     }
 }
