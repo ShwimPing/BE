@@ -69,6 +69,10 @@ public class AuthService {
         }
     }
 
+    public void withdraw(Long userId) {
+        userService.deleteUser(userId);
+    }
+
     public String getTestToken(Long userId) {
         return jwtTokenProvider.generateToken(getJwtUserDetails(userId)).accessToken();
     }

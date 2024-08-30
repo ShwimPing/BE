@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
@@ -61,6 +62,17 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseTemplate.from(response));
+    }
+
+    @Operation(summary = "회원탈퇴", description = "회원탈퇴")
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<ResponseTemplate<Object>> withdraw(@AuthenticationPrincipal Long userId) {
+
+        authService.withdraw(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(EMPTY_RESPONSE);
     }
 
     @Operation(summary = "테스트용 토큰발급", description = "테스트용 토큰발급")
