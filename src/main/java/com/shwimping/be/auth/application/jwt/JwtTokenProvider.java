@@ -23,13 +23,13 @@ public class JwtTokenProvider {
 
     @PostConstruct
     public void setKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecretKey());
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secretKey());
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public Tokens generateToken(JwtUserDetails jwtUserDetails) {
-        return new Tokens(createToken(jwtUserDetails, jwtProperties.getAccessTokenExpiration()),
-                createToken(jwtUserDetails, jwtProperties.getRefreshTokenExpiration()));
+        return new Tokens(createToken(jwtUserDetails, jwtProperties.accessTokenExpiration()),
+                createToken(jwtUserDetails, jwtProperties.refreshTokenExpiration()));
     }
 
     public String createToken(JwtUserDetails jwtUserDetails, Long expireTime) {
@@ -37,7 +37,7 @@ public class JwtTokenProvider {
 
         final Claims claims = Jwts.claims()
                 .setSubject(jwtUserDetails.userId().toString())
-                .setIssuer(jwtProperties.getIssuer())
+                .setIssuer(jwtProperties.issuer())
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expireTime));
 
