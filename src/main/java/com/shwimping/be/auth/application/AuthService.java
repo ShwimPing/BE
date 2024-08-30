@@ -12,7 +12,6 @@ import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.exception.InvalidPasswordException;
 import com.shwimping.be.user.exception.UserNotFoundException;
 import com.shwimping.be.user.repository.UserRepository;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,6 @@ import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_PASSWORD;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.USER_NOT_FOUND;
 
-@Tag(name = "Auth", description = "Auth 관련 API")
 @Slf4j
 @Service
 @RequiredArgsConstructor
