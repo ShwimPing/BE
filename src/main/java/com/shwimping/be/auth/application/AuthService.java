@@ -1,5 +1,6 @@
 package com.shwimping.be.auth.application;
 
+import com.shwimping.be.auth.application.exception.InvalidTokenException;
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.Tokens;
@@ -18,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_TOKEN;
+import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID_JWT;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_PASSWORD;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.USER_NOT_FOUND;
 
@@ -54,7 +57,16 @@ public class AuthService {
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
         response.setHeader("refresh-token", tokens.refreshToken());
 
-        return LoginResponse.of(tokens);
+        return LoginResponse.from(tokens);
+    }
+
+    public LoginResponse reIssueToken(String refreshToken) {
+        if (jwtTokenProvider.validateToken(refreshToken) == VALID_JWT) {
+            Long userId = jwtTokenProvider.getJwtUserDetails(refreshToken).userId();
+            return LoginResponse.from(jwtTokenProvider.generateToken(getJwtUserDetails(userId)));
+        } else {
+            throw new InvalidTokenException(INVALID_TOKEN);
+        }
     }
 
     public String getTestToken(Long userId) {

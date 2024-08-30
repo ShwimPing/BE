@@ -7,7 +7,7 @@ import lombok.Builder;
 public record LoginResponse(
         String accessToken
 ) {
-    public static LoginResponse of(Tokens token) {
+    public static LoginResponse from(Tokens token) {
         return LoginResponse.builder()
                 .accessToken(token.accessToken())
                 .build();

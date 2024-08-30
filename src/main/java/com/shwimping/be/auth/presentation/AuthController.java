@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +49,21 @@ public class AuthController {
                 .body(ResponseTemplate.from(loginResponse));
     }
 
+    @Operation(summary = "Access Token 재발급", description = "토큰 재발급시 Authorization에 'Bearer ' 없이 refresh Token만 입력해주세요")
+    @PostMapping("/reissue")
+    public ResponseEntity<ResponseTemplate<Object>> reIssueToken(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION) String refreshToken) {
+
+        LoginResponse response = authService.reIssueToken(refreshToken);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.from(response));
+    }
+
     @Operation(summary = "테스트용 토큰발급", description = "테스트용 토큰발급")
-    @GetMapping("/test-token")
-    public String testToken(@RequestParam Long userId) {
+    @GetMapping("/test/{userId}")
+    public String testToken(@PathVariable Long userId) {
         return authService.getTestToken(userId);
     }
 }

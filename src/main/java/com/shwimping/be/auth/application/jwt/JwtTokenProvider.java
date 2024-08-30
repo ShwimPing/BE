@@ -41,6 +41,8 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + expireTime));
 
+        claims.put("role", jwtUserDetails.role());
+
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
@@ -51,7 +53,11 @@ public class JwtTokenProvider {
     public JwtValidationType validateToken(String token) {
         try {
             final Claims claims = getClaims(token);
-            return JwtValidationType.VALID_JWT;
+            if (claims.getExpiration().after(new Date())) {
+                return JwtValidationType.VALID_JWT;
+            } else {
+                return JwtValidationType.EXPIRED_JWT_TOKEN;
+            }
         } catch (MalformedJwtException ex) {
             return JwtValidationType.INVALID_JWT_TOKEN;
         } catch (ExpiredJwtException ex) {
@@ -75,7 +81,7 @@ public class JwtTokenProvider {
         Claims claims = getClaims(token);
         return JwtUserDetails.builder()
                 .userId(Long.valueOf(claims.getSubject()))
-                .role((Role) claims.get("role"))
+                .role(Role.valueOf(claims.get("role").toString()))
                 .build();
     }
 }
