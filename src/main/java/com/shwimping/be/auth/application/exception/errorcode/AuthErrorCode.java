@@ -21,8 +21,6 @@ public enum AuthErrorCode implements ErrorCode {
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access is denied."),
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "this access token does not exist"),
     FEIGN_FAILED(HttpStatus.BAD_REQUEST, "Failed to call social login API."),
-
-    TOKEN_REISSUE_SUCCESS(HttpStatus.OK, "Token has been reissued."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid refresh token."),
     ;
 

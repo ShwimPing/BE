@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_TOKEN;
+import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_REFRESH_TOKEN;
 import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID_JWT;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_PASSWORD;
 
@@ -56,7 +56,7 @@ public class AuthService {
             Long userId = jwtTokenProvider.getJwtUserDetails(refreshToken).userId();
             return LoginResponse.from(jwtTokenProvider.generateToken(getJwtUserDetails(userId)));
         } else {
-            throw new InvalidTokenException(INVALID_TOKEN);
+            throw new InvalidTokenException(INVALID_REFRESH_TOKEN);
         }
     }
 
