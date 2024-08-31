@@ -26,8 +26,7 @@ public class UserService {
     @Transactional
     public void createUser(CreateUserRequest request) {
         if (!userRepository.existsByEmail(request.email())) {
-            String encodedPassword = passwordEncoder.encode(request.password());
-            User user = request.toUser(encodedPassword);
+            User user = request.toUser(passwordEncoder);
             userRepository.save(user);
         } else {
             throw new InvalidEmailException(INVALID_EMAIL);

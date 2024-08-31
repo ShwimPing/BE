@@ -4,6 +4,7 @@ import com.shwimping.be.user.domain.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.shwimping.be.user.domain.type.Provider.SELF;
 
@@ -16,10 +17,10 @@ public record CreateUserRequest(
     @NotEmpty(message = "토큰을 입력해주세요")
     String fcmToken
 ) {
-    public User toUser(String encodedPassword) {
+    public User toUser(PasswordEncoder passwordEncoder) {
         return User.builder()
                 .email(email)
-                .password(encodedPassword)
+                .password(passwordEncoder.encode(password))
                 .fcmToken(fcmToken)
                 .provider(SELF)
                 .nickname("temporal")

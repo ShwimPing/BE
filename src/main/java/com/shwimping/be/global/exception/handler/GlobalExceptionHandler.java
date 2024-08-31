@@ -9,6 +9,7 @@ import com.shwimping.be.global.exception.response.ErrorResponse.ValidationError;
 import com.shwimping.be.global.exception.response.ErrorResponse.ValidationErrors;
 import java.util.List;
 
+import com.shwimping.be.user.exception.InvalidEmailException;
 import com.shwimping.be.user.exception.InvalidPasswordException;
 import com.shwimping.be.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -61,20 +62,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleMemberNotFound(final UserNotFoundException e) {
-        final ErrorCode errorCode = e.getErrorCode();
-        return handleExceptionInternal(errorCode);
+        return handleExceptionInternal(e.getErrorCode());
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<Object> handleInvalidPassword(final InvalidPasswordException e) {
-        final ErrorCode errorCode = e.getErrorCode();
-        return handleExceptionInternal(errorCode);
+        return handleExceptionInternal(e.getErrorCode());
     }
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Object> handleInvalidToken(final InvalidTokenException e) {
-        final ErrorCode errorCode = e.getErrorCode();
-        return handleExceptionInternal(errorCode);
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<Object> handleInvalidEmail(final InvalidEmailException e) {
+        return handleExceptionInternal(e.getErrorCode());
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
