@@ -1,7 +1,6 @@
 package com.shwimping.be.auth.application.jwt;
 
 import com.shwimping.be.auth.application.jwt.type.JwtValidationType;
-import com.shwimping.be.user.domain.type.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -33,9 +32,9 @@ public class JwtTokenProvider {
     }
 
     public String createToken(JwtUserDetails jwtUserDetails, Long expireTime) {
-        final Date now = new Date();
+        Date now = new Date();
 
-        final Claims claims = Jwts.claims()
+        Claims claims = Jwts.claims()
                 .setSubject(jwtUserDetails.userId().toString())
                 .setIssuer(jwtProperties.issuer())
                 .setIssuedAt(now)
@@ -52,7 +51,7 @@ public class JwtTokenProvider {
 
     public JwtValidationType validateToken(String token) {
         try {
-            final Claims claims = getClaims(token);
+            Claims claims = getClaims(token);
             if (claims.getExpiration().after(new Date())) {
                 return JwtValidationType.VALID_JWT;
             } else {
@@ -79,9 +78,6 @@ public class JwtTokenProvider {
 
     public JwtUserDetails getJwtUserDetails(String token) {
         Claims claims = getClaims(token);
-        return JwtUserDetails.builder()
-                .userId(Long.valueOf(claims.getSubject()))
-                .role(Role.valueOf(claims.get("role").toString()))
-                .build();
+        return JwtUserDetails.from(claims);
     }
 }
