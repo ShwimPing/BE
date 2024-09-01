@@ -97,7 +97,8 @@ jobs:
       - name: Change nginx upstream
         uses: appleboy/ssh-action@master
         with:
-          username: ubuntu
+          username: root
+          password: ${{ secrets.EC2_SSH_PASSWORD }}
           host: ${{ secrets.SERVER_DOMAIN }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
