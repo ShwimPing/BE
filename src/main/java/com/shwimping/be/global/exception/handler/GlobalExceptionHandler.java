@@ -1,5 +1,6 @@
 package com.shwimping.be.global.exception.handler;
 
+import com.shwimping.be.auth.application.exception.InvalidTokenException;
 import com.shwimping.be.global.exception.FileConvertFailException;
 import com.shwimping.be.global.exception.errorcode.ErrorCode;
 import com.shwimping.be.global.exception.errorcode.GlobalErrorCode;
@@ -7,6 +8,10 @@ import com.shwimping.be.global.exception.response.ErrorResponse;
 import com.shwimping.be.global.exception.response.ErrorResponse.ValidationError;
 import com.shwimping.be.global.exception.response.ErrorResponse.ValidationErrors;
 import java.util.List;
+
+import com.shwimping.be.user.exception.InvalidEmailException;
+import com.shwimping.be.user.exception.InvalidPasswordException;
+import com.shwimping.be.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -53,6 +58,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(makeErrorResponse(errorCode));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleMemberNotFound(final UserNotFoundException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<Object> handleInvalidPassword(final InvalidPasswordException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Object> handleInvalidToken(final InvalidTokenException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<Object> handleInvalidEmail(final InvalidEmailException e) {
+        return handleExceptionInternal(e.getErrorCode());
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
