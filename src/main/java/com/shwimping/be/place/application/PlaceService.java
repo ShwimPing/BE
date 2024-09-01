@@ -1,5 +1,6 @@
 package com.shwimping.be.place.application;
 
+import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.MapPlaceResponse;
 import com.shwimping.be.place.repository.MongoPlaceRepository;
 import java.util.List;
@@ -16,9 +17,10 @@ public class PlaceService {
 
     private final MongoPlaceRepository mongoPlaceRepository;
 
-    public List<MapPlaceResponse> findPlacesWithinRadius(double longitude, double latitude, double radius) {
+    public List<MapPlaceResponse> findPlacesWithinRadius(
+            double longitude, double latitude, double radius, List<Category> category) {
 
-        return mongoPlaceRepository.findByLocationNear(longitude, latitude , radius).stream()
+        return mongoPlaceRepository.findByLocationNear(longitude, latitude, radius, category).stream()
                 .map(MapPlaceResponse::from)
                 .toList();
     }
