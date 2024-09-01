@@ -2,7 +2,7 @@ package com.shwimping.be.place.repository.init;
 
 import com.shwimping.be.global.util.DummyDataInit;
 import com.shwimping.be.place.domain.MongoPlace;
-import com.shwimping.be.place.repository.MongoPlaceRepository;
+import com.shwimping.be.place.repository.mongo.MongoPlaceRepository;
 import com.shwimping.be.place.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

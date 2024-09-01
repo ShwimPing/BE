@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "com.shwimping.be")
+@EnableMongoRepositories(basePackages = "com.shwimping.be.*.repository.mongo")
 public class MongoDbConfig {
 
 	@Bean

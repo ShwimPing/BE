@@ -1,4 +1,4 @@
-package com.shwimping.be.place.repository;
+package com.shwimping.be.place.repository.mongo;
 
 import com.shwimping.be.place.domain.MongoPlace;
 import com.shwimping.be.place.domain.type.Category;

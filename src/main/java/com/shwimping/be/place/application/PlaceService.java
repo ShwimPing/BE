@@ -2,7 +2,7 @@ package com.shwimping.be.place.application;
 
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.MapPlaceResponse;
-import com.shwimping.be.place.repository.MongoPlaceRepository;
+import com.shwimping.be.place.repository.mongo.MongoPlaceRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
