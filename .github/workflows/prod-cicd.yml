@@ -108,7 +108,8 @@ jobs:
       - name: Stop current server
         uses: appleboy/ssh-action@master
         with:
-          username: ubuntu
+          username: root
+          password: ${{ secrets.EC2_SSH_PASSWORD }}
           host: ${{ secrets.SERVER_DOMAIN }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true   # 실행 중 문제가 생기면 더 진행 X
