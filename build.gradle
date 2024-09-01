@@ -69,6 +69,9 @@ dependencies {
 
 	//object storage
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.545'
+
+	//테스트 코드 작성시 사용할 DB(H2)
+	runtimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {
