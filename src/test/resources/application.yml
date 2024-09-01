@@ -7,13 +7,6 @@ spring:
     username: sa
     password: test
     driver-class-name: org.h2.Driver
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: shwimpingtestdb
-      auto-index-creation: true
-
 
   jpa:
     hibernate:
