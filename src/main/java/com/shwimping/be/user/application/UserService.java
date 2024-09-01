@@ -16,8 +16,8 @@ import static com.shwimping.be.user.exception.errorcode.UserErrorCode.USER_NOT_F
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -35,9 +35,11 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-        userRepository.delete(user);
+        userRepository.findById(userId)
+                .ifPresentOrElse(userRepository::delete,
+                        () -> {
+                            throw new UserNotFoundException(USER_NOT_FOUND);
+                        });
     }
 
     public User getUserById(Long userId) {

@@ -51,8 +51,7 @@ public class JwtTokenProvider {
 
     public JwtValidationType validateToken(String token) {
         try {
-            Claims claims = getClaims(token);
-            if (claims.getExpiration().after(new Date())) {
+            if (getClaims(token).getExpiration().after(new Date())) {
                 return JwtValidationType.VALID_JWT;
             } else {
                 return JwtValidationType.EXPIRED_JWT_TOKEN;
@@ -77,7 +76,6 @@ public class JwtTokenProvider {
     }
 
     public JwtUserDetails getJwtUserDetails(String token) {
-        Claims claims = getClaims(token);
-        return JwtUserDetails.from(claims);
+        return JwtUserDetails.from(getClaims(token));
     }
 }
