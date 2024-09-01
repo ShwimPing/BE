@@ -30,7 +30,8 @@ public class AuthController {
 
     @Operation(summary = "자체 회원가입", description = "소셜 로그인 없는 자체 회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<ResponseTemplate<Object>> signUp(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<ResponseTemplate<Object>> signUp(
+            @Valid @RequestBody CreateUserRequest request) {
 
         authService.signUp(request);
 
@@ -66,7 +67,8 @@ public class AuthController {
 
     @Operation(summary = "회원탈퇴", description = "회원탈퇴")
     @DeleteMapping("/withdraw")
-    public ResponseEntity<ResponseTemplate<Object>> withdraw(@AuthenticationPrincipal Long userId) {
+    public ResponseEntity<ResponseTemplate<Object>> withdraw(
+            @AuthenticationPrincipal Long userId) {
 
         authService.withdraw(userId);
 
