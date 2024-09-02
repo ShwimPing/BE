@@ -36,7 +36,8 @@ public class SecurityConfig {
                         "/swagger-resources/*",
                         "/webjars/**",
                         "/auth/**",
-                        "/global/health-check");
+                        "/global/health-check",
+                        "/place/**");
     }
 
     @Bean
