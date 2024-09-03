@@ -1,9 +1,12 @@
 package com.shwimping.be.auth.presentation;
 
 import com.shwimping.be.auth.application.AuthService;
+import com.shwimping.be.auth.application.OAuthLoginService;
+import com.shwimping.be.auth.dto.request.KakaoLoginParams;
 import com.shwimping.be.auth.dto.request.LoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.global.dto.ResponseTemplate;
+import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +30,22 @@ import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
 public class AuthController {
 
     private final AuthService authService;
+    private final OAuthLoginService oAuthLoginService;
+
+    @Operation(summary = "소셜로그인", description = "소셜 로그인/ 회원가입")
+    @PostMapping("/login/{provider}")
+    public ResponseEntity<ResponseTemplate<Object>> socialLogin(@PathVariable(value = "provider") Provider provider,
+                                                                @RequestBody KakaoLoginParams params,
+                                                                HttpServletResponse response) {
+
+        log.info("[AuthController.socialLogin] provider: {}", provider);
+
+        oAuthLoginService.socialLogin(provider, params, response);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.from(params));
+    }
 
     @Operation(summary = "자체 회원가입", description = "소셜 로그인 없는 자체 회원가입")
     @PostMapping("/signup")
