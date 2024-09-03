@@ -12,6 +12,8 @@ public record JwtUserDetails(
         Long userId,
         Role role
 ) {
+    public static JwtUserDetails DUMMY_USER_DETAILS = JwtUserDetails.builder().userId(0L).role(GUEST).build();
+
     public static JwtUserDetails from(Claims claims) {
         return JwtUserDetails.builder()
                 .userId(Long.valueOf(claims.getSubject()))

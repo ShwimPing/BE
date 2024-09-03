@@ -64,6 +64,9 @@ public class JwtTokenProvider {
             return JwtValidationType.UNSUPPORTED_JWT_TOKEN;
         } catch (IllegalArgumentException ex) {
             return JwtValidationType.EMPTY_JWT;
+        } catch (@SuppressWarnings("deprecation") SignatureException  ex) {  //deprecated 되었지만 현재까지는 사용 가능
+            // 서명이 일치하지 않는 경우 처리
+            return JwtValidationType.INVALID_JWT_TOKEN; // 또는 다른 적절한 타입으로 변경 가능
         }
     }
 
