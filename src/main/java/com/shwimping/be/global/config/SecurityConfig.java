@@ -1,8 +1,8 @@
 package com.shwimping.be.global.config;
 
-import com.shwimping.be.auth.application.jwt.filter.JwtAccessDeniedHandler;
-import com.shwimping.be.auth.application.jwt.filter.JwtAuthenticationEntryPoint;
-import com.shwimping.be.auth.application.jwt.filter.JwtAuthenticationFilter;
+import com.shwimping.be.auth.presentation.filter.JwtAccessDeniedHandler;
+import com.shwimping.be.auth.presentation.filter.JwtAuthenticationEntryPoint;
+import com.shwimping.be.auth.presentation.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +47,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 기능 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))   // JWT 사용해서 세션 사용 X
                 .authorizeHttpRequests(auth -> auth // 요청에 대한 인증 설정
-                        .requestMatchers("/auth/login/**").permitAll() // 인증 없이 접근 허용
                         .anyRequest().authenticated())  //이외의 요청은 전부 인증 필요
                 .exceptionHandling(exceptionHandling -> {
                     exceptionHandling
