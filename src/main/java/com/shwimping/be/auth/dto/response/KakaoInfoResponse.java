@@ -1,7 +1,6 @@
 package com.shwimping.be.auth.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.shwimping.be.user.domain.type.Provider;
@@ -18,7 +17,8 @@ public record KakaoInfoResponse (
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @Builder
     public record KakaoAccount(
-            KakaoUserProfile profile
+            KakaoUserProfile profile,
+            String email
     ) {
         public String getNickname() {
             return profile.nickname();
@@ -40,6 +40,11 @@ public record KakaoInfoResponse (
     @Override
     public String getNickname() {
         return kakaoAccount.getNickname();
+    }
+
+    @Override
+    public String getEmail() {
+        return getEmail();
     }
 
     @Override

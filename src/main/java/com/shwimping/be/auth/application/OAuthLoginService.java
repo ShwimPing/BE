@@ -31,21 +31,15 @@ public class OAuthLoginService {
         return JwtUserDetails.from(user);
     }
 
-    public LoginResponse socialLogin(Provider provider, String accessToken, HttpServletResponse response) {
-        OAuthLoginParams oauthLoginParams = generateOAuthLoginParams(provider, accessToken);
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oauthLoginParams);
+    public LoginResponse socialLogin(Provider provider, KakaoLoginParams params, HttpServletResponse response) {
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+
+        log.info("OAuthInfoResponse: {}", oAuthInfoResponse);
+
         Long userId = findOrCreateUser(oAuthInfoResponse);
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(userId));
         response.setHeader("Refresh-Token", tokens.refreshToken());
         return LoginResponse.from(tokens);
-    }
-
-    private OAuthLoginParams generateOAuthLoginParams(Provider provider, String accessToken) {
-        if (provider == Provider.KAKAO) {
-            return new KakaoLoginParams(accessToken);
-        }
-
-        throw new IllegalArgumentException("Invalid provider: " + provider);
     }
 
     private Long findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
@@ -59,6 +53,7 @@ public class OAuthLoginService {
                 .socialId(oAuthInfoResponse.getId())
                 .nickname(oAuthInfoResponse.getNickname())
                 .provider(oAuthInfoResponse.getOAuthProvider())
+                .email(oAuthInfoResponse.getEmail())
                 .profileImageUrl("temporal.png")
                 .fcmToken("temporal")
                 .isAlarmAllowed(true)
