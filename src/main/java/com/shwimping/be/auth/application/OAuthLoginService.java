@@ -3,6 +3,7 @@ package com.shwimping.be.auth.application;
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.Tokens;
+import com.shwimping.be.auth.dto.request.KakaoLoginParams;
 import com.shwimping.be.auth.dto.request.OAuthLoginParams;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
@@ -21,33 +22,41 @@ import org.springframework.stereotype.Service;
 public class OAuthLoginService {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RequestOAuthInfoService requestOAuthInfoService;
+    private final UserRepository userRepository;
 
     public JwtUserDetails getJwtUserDetails(Long userId) {
         User user = userService.getUserById(userId);
         return JwtUserDetails.from(user);
     }
 
-    public LoginResponse socialLogin(Provider provider, OAuthLoginParams params, HttpServletResponse response) {
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
-        log.info("OAuthInfoResponse: {}", oAuthInfoResponse);
+    public LoginResponse socialLogin(Provider provider, String accessToken, HttpServletResponse response) {
+        OAuthLoginParams oauthLoginParams = generateOAuthLoginParams(provider, accessToken);
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oauthLoginParams);
         Long userId = findOrCreateUser(oAuthInfoResponse);
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(userId));
         response.setHeader("Refresh-Token", tokens.refreshToken());
         return LoginResponse.from(tokens);
     }
 
+    private OAuthLoginParams generateOAuthLoginParams(Provider provider, String accessToken) {
+        if (provider == Provider.KAKAO) {
+            return new KakaoLoginParams(accessToken);
+        }
+
+        throw new IllegalArgumentException("Invalid provider: " + provider);
+    }
+
     private Long findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
-        return userRepository.findByEmail(oAuthInfoResponse.getEmail())
+        return userRepository.findBySocialId(oAuthInfoResponse.getId())
                 .map(User::getId)
                 .orElseGet(() -> newUser(oAuthInfoResponse));
     }
 
     private Long newUser(OAuthInfoResponse oAuthInfoResponse) {
         User user = User.builder()
-                .email(oAuthInfoResponse.getEmail())
+                .socialId(oAuthInfoResponse.getId())
                 .nickname(oAuthInfoResponse.getNickname())
                 .provider(oAuthInfoResponse.getOAuthProvider())
                 .profileImageUrl("temporal.png")
