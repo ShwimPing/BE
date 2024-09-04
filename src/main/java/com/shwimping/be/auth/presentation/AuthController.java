@@ -35,16 +35,16 @@ public class AuthController {
     @Operation(summary = "소셜로그인", description = "소셜 로그인/ 회원가입")
     @PostMapping("/login/{provider}")
     public ResponseEntity<ResponseTemplate<Object>> socialLogin(@PathVariable(value = "provider") Provider provider,
-                                                                @RequestBody KakaoLoginParams params,
+                                                                @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String accessToken,
                                                                 HttpServletResponse response) {
 
         log.info("[AuthController.socialLogin] provider: {}", provider);
 
-        oAuthLoginService.socialLogin(provider, params, response);
+        LoginResponse socialResponse = oAuthLoginService.socialLogin(provider, accessToken, response);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseTemplate.from(params));
+                .body(ResponseTemplate.from(socialResponse));
     }
 
     @Operation(summary = "자체 회원가입", description = "소셜 로그인 없는 자체 회원가입")
