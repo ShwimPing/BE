@@ -50,6 +50,10 @@ public class OAuthLoginService {
                 .email(oAuthInfoResponse.getEmail())
                 .nickname(oAuthInfoResponse.getNickname())
                 .provider(oAuthInfoResponse.getOAuthProvider())
+                .profileImageUrl("temporal.png")
+                .fcmToken("temporal")
+                .isAlarmAllowed(true)
+                .nowLocation("temporal")
                 .build();
 
         return userRepository.save(user).getId();

@@ -14,7 +14,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@Component
+@Component("kakao")
 @RequiredArgsConstructor
 public class KakaoApiClient implements OAuthApiClient {
 
@@ -30,8 +30,8 @@ public class KakaoApiClient implements OAuthApiClient {
 
     @Override
     public String requestAccessToken(OAuthLoginParams params) {
-        log.info("url: {}", kakaoProperties.url().api() + "/oauth/token");
-        String url = kakaoProperties.url().api() + "/oauth/token";
+        log.info("url: {}", kakaoProperties.url().auth() + "/oauth/token");
+        String url = kakaoProperties.url().auth() + "/oauth/token";
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
