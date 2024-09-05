@@ -4,10 +4,13 @@ import com.shwimping.be.auth.application.exception.InvalidTokenException;
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.Tokens;
+import com.shwimping.be.auth.dto.request.KakaoLoginParams;
 import com.shwimping.be.auth.dto.request.LoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
+import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.domain.User;
+import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.exception.InvalidPasswordException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +30,7 @@ public class AuthService {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RequestOAuthInfoService requestOAuthInfoService;
     private final PasswordEncoder passwordEncoder;
 
     public JwtUserDetails getJwtUserDetails(Long userId) {
@@ -45,6 +49,18 @@ public class AuthService {
             throw new InvalidPasswordException(INVALID_PASSWORD);
         }
 
+        Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
+        response.setHeader("Refresh-Token", tokens.refreshToken());
+
+        return LoginResponse.from(tokens);
+    }
+
+    public LoginResponse socialLogin(Provider provider, KakaoLoginParams params, HttpServletResponse response) {
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+
+        log.info("OAuthInfoResponse: {}", oAuthInfoResponse);
+
+        User user = userService.findOrCreateUser(oAuthInfoResponse, params.fcmToken());
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
         response.setHeader("Refresh-Token", tokens.refreshToken());
 

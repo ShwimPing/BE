@@ -1,5 +1,6 @@
 package com.shwimping.be.user.domain;
 
+import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.user.domain.type.Provider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,5 +66,17 @@ public class User {
         this.provider = provider;
         this.socialId = socialId;
         this.nowLocation = nowLocation;
+    }
+
+    public static User of(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
+        return User.builder()
+                .email(oAuthInfoResponse.getEmail())
+                .fcmToken(fcmToken)
+                .provider(oAuthInfoResponse.getOAuthProvider())
+                .nickname(oAuthInfoResponse.getNickname())
+                .isAlarmAllowed(true)
+                .profileImageUrl("temporal.png")
+                .nowLocation("temporal")
+                .build();
     }
 }

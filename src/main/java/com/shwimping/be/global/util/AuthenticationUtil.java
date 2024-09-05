@@ -1,7 +1,7 @@
 package com.shwimping.be.global.util;
 
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
-import com.shwimping.be.auth.application.jwt.filter.UserAuthentication;
+import com.shwimping.be.auth.presentation.filter.UserAuthentication;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

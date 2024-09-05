@@ -1,5 +1,6 @@
 package com.shwimping.be.user.application;
 
+import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.exception.InvalidEmailException;
@@ -31,6 +32,12 @@ public class UserService {
         } else {
             throw new InvalidEmailException(INVALID_EMAIL);
         }
+    }
+
+    @Transactional
+    public User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
+        return userRepository.findBySocialId(oAuthInfoResponse.getId())
+                .orElseGet(() -> userRepository.save(User.of(oAuthInfoResponse, fcmToken)));
     }
 
     @Transactional
