@@ -42,6 +42,19 @@ public class UserService {
                         });
     }
 
+    // 사용자의 위치 정보를 업데이트
+    @Transactional
+    public void updateUserLocation(Long userId, String location) {
+        if (userId > 0) {
+            userRepository.findById(userId)
+                    .ifPresentOrElse(
+                            user -> user.updateLocation(location),
+                            () -> {
+                                throw new UserNotFoundException(USER_NOT_FOUND);
+                            });
+        }
+    }
+
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
