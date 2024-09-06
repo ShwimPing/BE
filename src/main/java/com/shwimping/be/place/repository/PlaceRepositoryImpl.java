@@ -3,10 +3,13 @@ package com.shwimping.be.place.repository;
 import static com.shwimping.be.place.domain.QPlace.place;
 import static com.shwimping.be.review.domain.QReview.review;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.shwimping.be.place.application.type.SortType;
+import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.SearchPlaceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,7 +23,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     public List<SearchPlaceResponse> findAllByLocationWithDistance(
-            double longitude, double latitude, double maxDistance) {
+            double longitude, double latitude, double maxDistance, List<Category> categoryList, SortType sortType) {
 
         // 동적 쿼리 실행 - 결과 리스트
         return jpaQueryFactory.select(
@@ -28,7 +31,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                                 place.id,
                                 place.name,
                                 place.address,
-                                distanceTemplate(longitude, latitude).as("distance"), // 거리 계산 결과를 'distance'로 alias
+                                distanceTemplate(longitude, latitude).as("distance"),
                                 place.category,
                                 place.openTime,
                                 place.closeTime,
@@ -36,11 +39,18 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                         )
                 )
                 .from(place)
-                .leftJoin(place.reviewList, review) // Review와 조인 (가정: Place 엔티티에 reviews 필드가 있음)
-                .where(distanceTemplate(longitude, latitude).loe(maxDistance)) // 최대 거리 조건
-                .groupBy(place.id) // 그룹화 - review와 조인해서 그룹화
-                .orderBy(distanceTemplate(longitude, latitude).asc()) // 거리순으로 정렬
+                .leftJoin(place.reviewList, review)
+                .where(distanceTemplate(longitude, latitude).loe(maxDistance), place.category.in(categoryList))
+                .groupBy(place.id)
+                .orderBy(orderExpression(sortType, longitude, latitude)) // 정렬 조건 추가
                 .fetch();
+    }
+
+    private OrderSpecifier<?> orderExpression(SortType sortType, double longitude, double latitude) {
+        return switch (sortType) {
+            case STAR_DESC -> review.rating.avg().coalesce(0.0).desc(); // 평점이 높은 순으로 정렬
+            case DISTANCE_ASC -> distanceTemplate(longitude, latitude).asc(); // 거리순으로 정렬
+        };
     }
 
     private NumberTemplate<Long> distanceTemplate(double longitude, double latitude) {

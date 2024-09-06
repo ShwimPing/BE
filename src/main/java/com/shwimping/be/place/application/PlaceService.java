@@ -33,6 +33,6 @@ public class PlaceService {
             double longitude, double latitude, List<Category> categoryList, SortType sortType, long page) {
 
         return SearchPlaceResponseList.of(page,
-                placeRepository.findAllByLocationWithDistance(longitude, latitude, 1000));
+                placeRepository.findAllByLocationWithDistance(longitude, latitude, 1000, categoryList, sortType));
     }
 }
