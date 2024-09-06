@@ -1,6 +1,7 @@
 package com.shwimping.be.place.presentation;
 
 import com.shwimping.be.global.dto.ResponseTemplate;
+import com.shwimping.be.place.application.AIService;
 import com.shwimping.be.place.application.PlaceService;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.type.Category;
@@ -27,8 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/place")
 public class PlaceController {
 
-    private final PlaceService placeService;
     private final UserService userService;
+    private final PlaceService placeService;
+    private final AIService aiService;
 
     @Operation(summary = "주변 장소 검색", description = "경도, 위도, 거리를 기반으로 검색, 거리는 m 단위로 입력 - 예시 데이터 경도: 127.0965824, 위도: 37.47153792 - 서울특별시 강남구 자곡로 116(도서관 쉼터), region은 XX구를 의미하며 재난 경보 푸쉬 알림에서 사용")
     @GetMapping("/nearby")
@@ -66,5 +68,17 @@ public class PlaceController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseTemplate.from(nearestPlaces));
+    }
+
+    @Operation(summary = "AI 챗봇", description = "AI 챗봇을 통해 사용자의 요청에 대한 응답을 받음")
+    @GetMapping("/ai")
+    public ResponseEntity<ResponseTemplate<?>> getAIResponse(
+            @RequestParam String message) {
+
+        aiService.getResponse(message);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.EMPTY_RESPONSE);
     }
 }

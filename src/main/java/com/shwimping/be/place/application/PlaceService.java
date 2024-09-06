@@ -22,6 +22,7 @@ public class PlaceService {
     private final MongoPlaceRepository mongoPlaceRepository;
     private final PlaceRepository placeRepository;
 
+    // 주변 장소 검색
     public List<MapPlaceResponse> findPlacesWithinRadius(
             double longitude, double latitude, double radius, List<Category> category) {
 
@@ -30,6 +31,7 @@ public class PlaceService {
                 .toList();
     }
 
+    // 특정 조건 장소 검색
     public SearchPlaceResponseList findNearestPlaces(
             double longitude, double latitude, int maxDistant, List<Category> categoryList, SortType sortType,
             long page) {
