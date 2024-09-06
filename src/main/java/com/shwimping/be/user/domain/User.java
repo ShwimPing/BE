@@ -80,4 +80,8 @@ public class User {
                 .nowLocation("temporal")
                 .build();
     }
+
+    public void updateLocation(String location) {
+        this.nowLocation = location;
+    }
 }
