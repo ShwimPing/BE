@@ -1,8 +1,8 @@
 package com.shwimping.be.auth.presentation;
 
 import com.shwimping.be.auth.application.AuthService;
-import com.shwimping.be.auth.dto.request.KakaoLoginParams;
 import com.shwimping.be.auth.dto.request.LoginRequest;
+import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.user.domain.type.Provider;
@@ -30,14 +30,14 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "소셜로그인", description = "소셜 로그인/ 회원가입")
+    @Operation(summary = "소셜 로그인", description = "소셜 로그인 및 회원가입")
     @PostMapping("/login/{provider}")
     public ResponseEntity<ResponseTemplate<Object>> socialLogin(
-            @PathVariable(value = "provider") Provider provider,
-            @RequestBody KakaoLoginParams params,
+            @PathVariable Provider provider,
+            @RequestBody OAuthLoginRequest request,
             HttpServletResponse response) {
 
-        LoginResponse socialResponse = authService.socialLogin(provider, params, response);
+        LoginResponse socialResponse = authService.socialLogin(provider, request, response);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

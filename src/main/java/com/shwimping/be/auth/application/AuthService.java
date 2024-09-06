@@ -6,6 +6,8 @@ import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.Tokens;
 import com.shwimping.be.auth.dto.request.KakaoLoginParams;
 import com.shwimping.be.auth.dto.request.LoginRequest;
+import com.shwimping.be.auth.dto.request.OAuthLoginParams;
+import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.user.application.UserService;
@@ -55,14 +57,23 @@ public class AuthService {
         return LoginResponse.from(tokens);
     }
 
-    public LoginResponse socialLogin(Provider provider, KakaoLoginParams params, HttpServletResponse response) {
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+    public LoginResponse socialLogin(Provider provider, OAuthLoginRequest request, HttpServletResponse response) {
+        OAuthLoginParams oAuthLoginParams = generateOAuthLoginParams(provider, request);
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oAuthLoginParams);
 
-        User user = userService.findOrCreateUser(oAuthInfoResponse, params.fcmToken());
+        User user = userService.findOrCreateUser(oAuthInfoResponse, request.fcmToken());
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
         response.setHeader("Refresh-Token", tokens.refreshToken());
 
         return LoginResponse.from(tokens);
+    }
+
+    private OAuthLoginParams generateOAuthLoginParams(Provider provider, OAuthLoginRequest request) {
+        if (provider == Provider.KAKAO) {
+            return new KakaoLoginParams(request.authCode(), provider);
+        }
+
+        throw new IllegalArgumentException("Invalid provider: " + provider);
     }
 
     public LoginResponse reIssueToken(String refreshToken) {

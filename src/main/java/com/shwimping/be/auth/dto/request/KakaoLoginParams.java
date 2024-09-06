@@ -5,8 +5,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public record KakaoLoginParams(
-        String kakaoCode,
-        String fcmToken
+        String authCode,
+        Provider oAuthProvider
 ) implements OAuthLoginParams {
 
     @Override
@@ -17,7 +17,7 @@ public record KakaoLoginParams(
     @Override
     public MultiValueMap<String, String> makeBody() {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("code", kakaoCode);
+        body.add("code", authCode);
         return body;
     }
 }
