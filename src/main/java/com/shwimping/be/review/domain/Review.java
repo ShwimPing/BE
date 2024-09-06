@@ -41,11 +41,11 @@ public class Review {
     @Column(name = "review_image_url")
     private String reviewImageUrl;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "place_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Place place;
 

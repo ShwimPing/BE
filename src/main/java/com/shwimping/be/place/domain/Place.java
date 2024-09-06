@@ -1,6 +1,8 @@
 package com.shwimping.be.place.domain;
 
 import com.shwimping.be.place.domain.type.Category;
+import com.shwimping.be.review.domain.Review;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,8 +10,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,6 +57,9 @@ public class Place {
 
     @Column(name = "longitude", nullable = false)
     private Double longitude;
+
+    @OneToMany(mappedBy = "place", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<Review> reviewList;
 
     @Builder
     public Place(String name, String region, Category category, String address, LocalTime openTime, LocalTime closeTime,
