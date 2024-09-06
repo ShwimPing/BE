@@ -66,4 +66,8 @@ public class User {
         this.socialId = socialId;
         this.nowLocation = nowLocation;
     }
+
+    public void updateLocation(String location) {
+        this.nowLocation = location;
+    }
 }

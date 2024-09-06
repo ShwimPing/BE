@@ -1,6 +1,7 @@
 package com.shwimping.be.global.util;
 
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
+import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.filter.UserAuthentication;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,11 @@ public class AuthenticationUtil {
         UserAuthentication authentication = UserAuthentication.from(jwtTokenProvider.getJwtUserDetails(token));
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         return authentication;
+    }
+
+    public void setDummyAuthentication(HttpServletRequest request) {
+        UserAuthentication authentication = UserAuthentication.from(JwtUserDetails.DUMMY_USER_DETAILS);
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

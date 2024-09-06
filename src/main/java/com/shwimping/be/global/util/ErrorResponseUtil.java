@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public class ErrorResponseUtil {
+public abstract class ErrorResponseUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
