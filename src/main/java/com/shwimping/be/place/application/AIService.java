@@ -3,6 +3,11 @@ package com.shwimping.be.place.application;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.shwimping.be.place.application.type.SortType;
+import com.shwimping.be.place.domain.type.Category;
+import com.shwimping.be.place.dto.response.GetShelterRecommendAIResponse;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.Message;
@@ -21,37 +26,66 @@ public class AIService {
     private final ChatModel chatModel;
 
     public void getResponse(String message) {
+        Message userMessage = getMessage(message);
+
+        String response = chatModel.call(userMessage);
+        log.info("response: {}", response);
+
+        GetShelterRecommendAIResponse getShelterRecommendAIResponse = convertResponseToObject(response);
+        log.info("getShelterRecommendAIResponse: {}", getShelterRecommendAIResponse);
+
+        LocalDate today = LocalDate.now();
+        int month = today.getMonthValue();
+
+        // 카테고리 추가 로직은 여기서 처리할 수 있습니다.
+        if (month >= 6 && month <= 9) {
+            // 여름철 추가
+        } else if (month >= 11 || month <= 3) {
+            // 겨울철 추가
+        }
+    }
+
+    private Message getMessage(String message) {
         String command = "사용자의 요청을 분석하여 정보를 제공해줘. \n" +
-                "1. 거리 (m 단위로 입력) \n" +
-                "2. 쉼터의 카테고리 (SMART, HOT, COLD, LIBRARY, TOGETHER) - 여러 개 가능 \n" +
-                "3. 정렬 기준 (STAR_DESC 또는 DISTANCE_ASC) \n\n" +
+                "1. distance (m 단위로) \n" +
+                "2. category (SMART, LIBRARY, TOGETHER) - 여러 개 가능 \n" +
+                "3. sortType (STAR_DESC 또는 DISTANCE_ASC) \n\n" +
                 "예시: \n" +
-                "거리: 3000 (사용자가 '3km 안에'라고 했을 때) \n" +
-                "카테고리: HOT (사용자가 덥다고 했을 때), LIBRARY (사용자가 조용한 곳을 원할 때) \n" +
-                "COLD (사용자가 춥다고 했을 때), SMART, TOGETHER (이 두개는 아무데나라고 하면 추가 + 기본)" +
-                "정렬 기준: DISTANCE_ASC (가까운 순으로), STAR_DESC (평점이 좋은 순으로) \n\n" +
+                "distance: 3000 (사용자가 '3km 안에'라고 했을 때) \n" +
+                "category: SMART, TOGETHER, LIBRARY (항상 추가)" +
+                "sortType: DISTANCE_ASC (가까운 순으로), STAR_DESC (평점이 좋은 순으로) \n\n" +
                 "기본값: \n" +
-                "거리: 2000 (입력하지 않을 경우) \n" +
-                "카테고리: 모든 값 \n" +
-                "정렬 기준: DISTANCE_ASC (입력하지 않을 경우) \n\n" +
+                "distance: 2000 (입력하지 않을 경우) \n" +
+                "category: SMART, TOGETHER, LIBRARY (입력하지 않을 경우 모두 기본 값)\n" +
+                "sortType: DISTANCE_ASC (입력하지 않을 경우) \n" +
+                "예외 사항: \n" +
+                "category: SMART(스마트 쉼터 제외 요청시 제외), TOGETHER(기후동행쉼터 제외 요청시 제외), LIBRARY(도서관 제외 요청시 제외)\n\n" +
                 "사용자의 메시지를 위 정보에 기반하여 분석해서 JSON 형식으로 반환해줘. : " + message;
 
         PromptTemplate template = new PromptTemplate(command);
         template.add("message", message);
 
         String templateMessage = template.render();
-        Message userMessage = new UserMessage(templateMessage);
+        return new UserMessage(templateMessage);
+    }
 
-        String response = chatModel.call(userMessage);
-        log.info("response: {}", response);
+    private GetShelterRecommendAIResponse convertResponseToObject(String response) {
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        // JSON 파싱 (여기서는 Jackson 라이브러리를 사용할 수 있다고 가정)
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonResponse = objectMapper.readTree(response);
-            // 이후 jsonResponse를 사용하여 필요한 데이터 처리
+            JsonNode jsonNode = objectMapper.readTree(response);
+
+            Long distance = jsonNode.get("distance").asLong();
+            List<Category> categories = objectMapper.convertValue(
+                    jsonNode.get("category"),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, Category.class)
+            );
+            SortType sortType = SortType.valueOf(jsonNode.get("sortType").asText());
+
+            return new GetShelterRecommendAIResponse(distance, categories, sortType);
+
         } catch (JsonProcessingException e) {
-            log.error("JSON 파싱 오류: {}", e.getMessage());
+            throw new IllegalArgumentException("JSON 형식 변환 중 오류가 발생했습니다.");
         }
     }
 }
