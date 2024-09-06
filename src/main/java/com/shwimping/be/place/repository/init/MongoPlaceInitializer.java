@@ -2,8 +2,8 @@ package com.shwimping.be.place.repository.init;
 
 import com.shwimping.be.global.util.DummyDataInit;
 import com.shwimping.be.place.domain.MongoPlace;
-import com.shwimping.be.place.repository.mongo.MongoPlaceRepository;
 import com.shwimping.be.place.repository.PlaceRepository;
+import com.shwimping.be.place.repository.mongo.MongoPlaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -29,9 +29,10 @@ public class MongoPlaceInitializer implements ApplicationRunner {
                 MongoPlace mongoPlace = MongoPlace.builder()
                         .category(place.getCategory())
                         .address(place.getAddress())
-                        .location(new GeoJsonPoint(place.getLocation().getX(), place.getLocation().getY()))
+                        .location(new GeoJsonPoint(place.getLongitude(), place.getLatitude()))
                         .placeId(place.getId())
                         .build();
+
                 mongoPlaceRepository.save(mongoPlace);
             });
         }
