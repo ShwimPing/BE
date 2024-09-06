@@ -34,10 +34,10 @@ public class PlaceService {
     // 특정 조건 장소 검색
     public SearchPlaceResponseList findNearestPlaces(
             double longitude, double latitude, int maxDistant, List<Category> categoryList, SortType sortType,
-            long page) {
+            String keyword, long page) {
 
         List<SearchPlaceResponse> allSearchResult = placeRepository.findAllByLocationWithDistance(
-                longitude, latitude, maxDistant, categoryList, sortType, page);
+                longitude, latitude, maxDistant, categoryList, sortType, keyword, page);
 
         // 전체 데이터 수 카운트
         long totalCount = placeRepository.countByLocationWithDistance(longitude, latitude, maxDistant, categoryList);

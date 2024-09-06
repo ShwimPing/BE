@@ -5,6 +5,7 @@ import static com.shwimping.be.review.domain.QReview.review;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 @Repository
@@ -24,7 +26,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
     public List<SearchPlaceResponse> findAllByLocationWithDistance(
             double longitude, double latitude, int maxDistance, List<Category> categoryList, SortType sortType,
-            long page) {
+            String keyword, long page) {
 
         // 동적 쿼리 실행 - 결과 리스트
         return jpaQueryFactory.select(
@@ -41,7 +43,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 )
                 .from(place)
                 .leftJoin(place.reviewList, review)
-                .where(distanceTemplate(longitude, latitude).loe(maxDistance), place.category.in(categoryList))
+                .where(distanceTemplate(longitude, latitude).loe(maxDistance), place.category.in(categoryList),
+                        keywordExpression(keyword))
                 .groupBy(place.id)
                 .orderBy(orderExpression(sortType, longitude, latitude)) // 정렬 조건 추가
                 .offset(page * 10) // 페이지 번호에 따라 결과를 10개씩 가져오도록 설정
@@ -59,6 +62,14 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     private NumberTemplate<Long> distanceTemplate(double longitude, double latitude) {
         return Expressions.numberTemplate(Long.class,
                 "ST_Distance_Sphere(point({0}, {1}), point(place.longitude, place.latitude))", longitude, latitude);
+    }
+
+    private BooleanExpression keywordExpression(String keyword) {
+        if (StringUtils.hasText(keyword)) {
+            return place.name.contains(keyword).or(place.address.contains(keyword));
+        } else {
+            return null;
+        }
     }
 
     public Long countByLocationWithDistance(

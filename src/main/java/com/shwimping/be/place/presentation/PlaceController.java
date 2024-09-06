@@ -60,10 +60,11 @@ public class PlaceController {
             @RequestParam int maxDistance,
             @RequestParam List<Category> category,
             @RequestParam SortType sortType,
+            @RequestParam(required = false) String keyword,
             @RequestParam int page) {
 
         SearchPlaceResponseList nearestPlaces =
-                placeService.findNearestPlaces(longitude, latitude, maxDistance, category, sortType, page);
+                placeService.findNearestPlaces(longitude, latitude, maxDistance, category, sortType, keyword, page);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
