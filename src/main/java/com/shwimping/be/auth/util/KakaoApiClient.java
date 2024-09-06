@@ -4,10 +4,11 @@ import com.shwimping.be.auth.dto.request.OAuthLoginParams;
 import com.shwimping.be.auth.dto.response.KakaoInfoResponse;
 import com.shwimping.be.auth.dto.response.KakaoTokens;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
-import com.shwimping.be.user.domain.type.Provider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -22,11 +23,6 @@ public class KakaoApiClient implements OAuthApiClient {
 
     private final KakaoProperties kakaoProperties;
     private final RestTemplate restTemplate;
-
-    @Override
-    public Provider oAuthProvider() {
-        return Provider.KAKAO;
-    }
 
     @Override
     public String requestAccessToken(OAuthLoginParams params) {
