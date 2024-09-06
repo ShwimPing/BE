@@ -58,8 +58,6 @@ public class AuthService {
     public LoginResponse socialLogin(Provider provider, KakaoLoginParams params, HttpServletResponse response) {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
 
-        log.info("OAuthInfoResponse: {}", oAuthInfoResponse);
-
         User user = userService.findOrCreateUser(oAuthInfoResponse, params.fcmToken());
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
         response.setHeader("Refresh-Token", tokens.refreshToken());

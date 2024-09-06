@@ -70,10 +70,11 @@ public class User {
 
     public static User of(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
         return User.builder()
-                .email(oAuthInfoResponse.getEmail())
                 .fcmToken(fcmToken)
+                .email(oAuthInfoResponse.getEmail())
                 .provider(oAuthInfoResponse.getOAuthProvider())
                 .nickname(oAuthInfoResponse.getNickname())
+                .socialId(oAuthInfoResponse.getId())
                 .isAlarmAllowed(true)
                 .profileImageUrl("temporal.png")
                 .nowLocation("temporal")

@@ -20,10 +20,6 @@ public record KakaoInfoResponse (
             KakaoUserProfile profile,
             String email
     ) {
-        public String getNickname() {
-            return profile.nickname();
-        }
-
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public record KakaoUserProfile(
                 String nickname,
@@ -39,12 +35,12 @@ public record KakaoInfoResponse (
 
     @Override
     public String getNickname() {
-        return kakaoAccount.getNickname();
+        return kakaoAccount.profile().nickname();
     }
 
     @Override
     public String getEmail() {
-        return getEmail();
+        return kakaoAccount.email();
     }
 
     @Override

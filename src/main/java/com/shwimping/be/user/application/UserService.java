@@ -37,7 +37,13 @@ public class UserService {
     @Transactional
     public User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
         return userRepository.findBySocialId(oAuthInfoResponse.getId())
-                .orElseGet(() -> userRepository.save(User.of(oAuthInfoResponse, fcmToken)));
+                .orElseGet(() -> getUser(oAuthInfoResponse, fcmToken));
+    }
+
+    private User getUser(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
+        User user = User.of(oAuthInfoResponse, fcmToken);
+        userRepository.save(user);
+        return user;
     }
 
     @Transactional
