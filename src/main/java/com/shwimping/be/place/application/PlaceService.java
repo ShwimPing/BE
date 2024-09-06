@@ -30,9 +30,9 @@ public class PlaceService {
     }
 
     public SearchPlaceResponseList findNearestPlaces(
-            double longitude, double latitude, List<Category> categoryList, SortType sortType, long page) {
+            double longitude, double latitude, int maxDistant, List<Category> categoryList, SortType sortType, long page) {
 
         return SearchPlaceResponseList.of(page,
-                placeRepository.findAllByLocationWithDistance(longitude, latitude, 1000, categoryList, sortType));
+                placeRepository.findAllByLocationWithDistance(longitude, latitude, maxDistant, categoryList, sortType, page));
     }
 }

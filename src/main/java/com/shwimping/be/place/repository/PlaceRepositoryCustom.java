@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface PlaceRepositoryCustom {
     List<SearchPlaceResponse> findAllByLocationWithDistance(
-            double longitude, double latitude, double maxDistance, List<Category> categoryList, SortType sortType);
+            double longitude, double latitude, int maxDistance, List<Category> categoryList, SortType sortType,
+            long page);
 }

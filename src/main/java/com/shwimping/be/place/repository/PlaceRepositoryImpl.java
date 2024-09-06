@@ -23,7 +23,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     public List<SearchPlaceResponse> findAllByLocationWithDistance(
-            double longitude, double latitude, double maxDistance, List<Category> categoryList, SortType sortType) {
+            double longitude, double latitude, int maxDistance, List<Category> categoryList, SortType sortType,
+            long page) {
 
         // 동적 쿼리 실행 - 결과 리스트
         return jpaQueryFactory.select(
@@ -43,6 +44,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .where(distanceTemplate(longitude, latitude).loe(maxDistance), place.category.in(categoryList))
                 .groupBy(place.id)
                 .orderBy(orderExpression(sortType, longitude, latitude)) // 정렬 조건 추가
+                .offset(page * 10) // 페이지 번호에 따라 결과를 10개씩 가져오도록 설정
+                .limit(10)
                 .fetch();
     }
 

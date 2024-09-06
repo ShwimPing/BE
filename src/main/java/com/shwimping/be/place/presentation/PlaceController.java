@@ -55,12 +55,13 @@ public class PlaceController {
     public ResponseEntity<ResponseTemplate<?>> searchPlaces(
             @RequestParam double longitude,
             @RequestParam double latitude,
+            @RequestParam int maxDistance,
             @RequestParam List<Category> category,
             @RequestParam SortType sortType,
             @RequestParam int page) {
 
         SearchPlaceResponseList nearestPlaces =
-                placeService.findNearestPlaces(longitude, latitude, category, sortType, page);
+                placeService.findNearestPlaces(longitude, latitude, maxDistance, category, sortType, page);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
