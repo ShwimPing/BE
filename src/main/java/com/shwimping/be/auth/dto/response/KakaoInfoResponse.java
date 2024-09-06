@@ -22,8 +22,7 @@ public record KakaoInfoResponse (
     ) {
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public record KakaoUserProfile(
-                String nickname,
-                String profileImageUrl
+                String nickname
         ) {
         }
     }

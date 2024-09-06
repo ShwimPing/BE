@@ -35,13 +35,13 @@ public class UserService {
     }
 
     @Transactional
-    public User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
+    public User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
         return userRepository.findBySocialId(oAuthInfoResponse.getId())
-                .orElseGet(() -> getUser(oAuthInfoResponse, fcmToken));
+                .orElseGet(() -> getUser(oAuthInfoResponse));
     }
 
-    private User getUser(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
-        User user = User.of(oAuthInfoResponse, fcmToken);
+    private User getUser(OAuthInfoResponse oAuthInfoResponse) {
+        User user = User.from(oAuthInfoResponse);
         userRepository.save(user);
         return user;
     }

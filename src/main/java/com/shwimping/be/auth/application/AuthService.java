@@ -6,6 +6,7 @@ import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.Tokens;
 import com.shwimping.be.auth.dto.request.KakaoLoginParams;
+import com.shwimping.be.auth.dto.request.NaverLoginParams;
 import com.shwimping.be.auth.dto.request.LoginRequest;
 import com.shwimping.be.auth.dto.request.OAuthLoginParams;
 import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
@@ -58,20 +59,20 @@ public class AuthService {
 
     public LoginResponse socialLogin(Provider provider, OAuthLoginRequest request, HttpServletResponse response) {
         OAuthLoginParams oAuthLoginParams = generateOAuthLoginParams(provider, request);
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oAuthLoginParams, request.authCode());
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oAuthLoginParams, request);
 
-        User user = userService.findOrCreateUser(oAuthInfoResponse, request.fcmToken());
+        User user = userService.findOrCreateUser(oAuthInfoResponse);
 
         return getLoginResponse(response, user);
     }
 
     // Provider 에 따라 OAuthLoginParams 생성
     private OAuthLoginParams generateOAuthLoginParams(Provider provider, OAuthLoginRequest request) {
-        if (provider == Provider.KAKAO) {
-            return new KakaoLoginParams(request.authCode(), provider);
-        }
-
-        throw new InvalidProviderException(INVALID_PROVIDER);
+        return switch (provider) {
+            case KAKAO -> new KakaoLoginParams(request.authCode(), provider);
+            case NAVER -> new NaverLoginParams(request.authCode(), request.state(), provider);
+            default -> throw new InvalidProviderException(INVALID_PROVIDER);
+        };
     }
 
     // JWT 토큰 발급 및 AccessToken, RefreshToken 반환

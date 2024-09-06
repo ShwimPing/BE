@@ -30,7 +30,9 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "소셜 로그인", description = "소셜 로그인 및 회원가입")
+    @Operation(summary = "소셜 로그인 / 회원가입", description = "소셜 로그인 및 회원가입<br>" +
+            "네이버 로그인일 때만 state를 입력해주세요.<br>" +
+            "로그인인지 회원가입인지 프론트에서 확인하기 어렵기 때문에 fcmToken은 닉네임 설정에서 받아야 할듯!")
     @PostMapping("/login/{provider}")
     public ResponseEntity<ResponseTemplate<Object>> socialLogin(
             @PathVariable Provider provider,

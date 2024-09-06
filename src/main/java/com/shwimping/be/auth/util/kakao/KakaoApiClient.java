@@ -1,6 +1,7 @@
 package com.shwimping.be.auth.util.kakao;
 
 import com.shwimping.be.auth.dto.request.OAuthLoginParams;
+import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.KakaoTokens;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.auth.util.OAuthApiClient;
@@ -22,12 +23,8 @@ public class KakaoApiClient implements OAuthApiClient {
     private final KakaoUserClient kakaoUserClient;
 
     @Override
-    public String requestAccessToken(OAuthLoginParams params, String authCode) {
-        MultiValueMap<String, String> body = params.makeBody();
-        body.add("grant_type", GRANT_TYPE);
-        body.add("client_id", kakaoProperties.clientId());
-
-        KakaoTokens response = kakaoTokenClient.requestAccessToken(GRANT_TYPE, kakaoProperties.clientId(), kakaoProperties.redirectUri(), authCode);
+    public String requestAccessToken(OAuthLoginParams params, OAuthLoginRequest request) {
+        KakaoTokens response = kakaoTokenClient.requestAccessToken(GRANT_TYPE, kakaoProperties.clientId(), kakaoProperties.redirectUri(), request.authCode());
 
         assert response != null;
         return response.accessToken();

@@ -1,6 +1,7 @@
 package com.shwimping.be.auth.application;
 
 import com.shwimping.be.auth.dto.request.OAuthLoginParams;
+import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.auth.util.OAuthApiClient;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,9 @@ public class RequestOAuthInfoService {
 
     private final Map<String, OAuthApiClient> clients;
 
-    public OAuthInfoResponse request(OAuthLoginParams params, String authCode) {
+    public OAuthInfoResponse request(OAuthLoginParams params, OAuthLoginRequest request) {
         OAuthApiClient client = clients.get(params.oAuthProvider().getProvider());
-        String accessToken = client.requestAccessToken(params, authCode);
+        String accessToken = client.requestAccessToken(params, request);
         return client.requestOauthInfo(accessToken);
     }
 }

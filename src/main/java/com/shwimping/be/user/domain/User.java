@@ -68,9 +68,9 @@ public class User {
         this.nowLocation = nowLocation;
     }
 
-    public static User of(OAuthInfoResponse oAuthInfoResponse, String fcmToken) {
+    public static User from(OAuthInfoResponse oAuthInfoResponse) {
         return User.builder()
-                .fcmToken(fcmToken)
+                .fcmToken("temporal")
                 .email(oAuthInfoResponse.getEmail())
                 .provider(oAuthInfoResponse.getOAuthProvider())
                 .nickname(oAuthInfoResponse.getNickname())
