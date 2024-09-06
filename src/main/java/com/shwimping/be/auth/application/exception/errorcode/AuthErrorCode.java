@@ -22,6 +22,7 @@ public enum AuthErrorCode implements ErrorCode {
     TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "this access token does not exist"),
     FEIGN_FAILED(HttpStatus.BAD_REQUEST, "Failed to call social login API."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid refresh token."),
+    INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "Invalid provider."),
     ;
 
     private final HttpStatus httpStatus;

@@ -1,5 +1,6 @@
 package com.shwimping.be.auth.application;
 
+import com.shwimping.be.auth.application.exception.InvalidProviderException;
 import com.shwimping.be.auth.application.exception.InvalidTokenException;
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_PROVIDER;
 import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_REFRESH_TOKEN;
 import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID_JWT;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_PASSWORD;
@@ -51,31 +53,36 @@ public class AuthService {
             throw new InvalidPasswordException(INVALID_PASSWORD);
         }
 
-        Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
-        response.setHeader("Refresh-Token", tokens.refreshToken());
-
-        return LoginResponse.from(tokens);
+        return getLoginResponse(response, user);
     }
 
     public LoginResponse socialLogin(Provider provider, OAuthLoginRequest request, HttpServletResponse response) {
         OAuthLoginParams oAuthLoginParams = generateOAuthLoginParams(provider, request);
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oAuthLoginParams);
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oAuthLoginParams, request.authCode());
 
         User user = userService.findOrCreateUser(oAuthInfoResponse, request.fcmToken());
-        Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
-        response.setHeader("Refresh-Token", tokens.refreshToken());
 
-        return LoginResponse.from(tokens);
+        return getLoginResponse(response, user);
     }
 
+    // Provider 에 따라 OAuthLoginParams 생성
     private OAuthLoginParams generateOAuthLoginParams(Provider provider, OAuthLoginRequest request) {
         if (provider == Provider.KAKAO) {
             return new KakaoLoginParams(request.authCode(), provider);
         }
 
-        throw new IllegalArgumentException("Invalid provider: " + provider);
+        throw new InvalidProviderException(INVALID_PROVIDER);
     }
 
+    // JWT 토큰 발급 및 AccessToken, RefreshToken 반환
+    private LoginResponse getLoginResponse(HttpServletResponse response, User user) {
+        Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
+        response.setHeader("Refresh-Token", tokens.refreshToken());
+
+        return LoginResponse.from(tokens);
+    }
+
+    // AccessToken 재발급
     public LoginResponse reIssueToken(String refreshToken) {
         if (jwtTokenProvider.validateToken(refreshToken) == VALID_JWT) {
             Long userId = jwtTokenProvider.getJwtUserDetails(refreshToken).userId();
