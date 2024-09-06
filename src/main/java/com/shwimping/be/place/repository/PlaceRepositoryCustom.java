@@ -9,4 +9,6 @@ public interface PlaceRepositoryCustom {
     List<SearchPlaceResponse> findAllByLocationWithDistance(
             double longitude, double latitude, int maxDistance, List<Category> categoryList, SortType sortType,
             long page);
+
+    Long countByLocationWithDistance(double longitude, double latitude, int maxDistant, List<Category> categoryList);
 }

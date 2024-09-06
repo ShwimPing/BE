@@ -50,7 +50,7 @@ public class PlaceController {
                 .body(ResponseTemplate.from(placesWithinRadius));
     }
 
-    @Operation(summary = "검색", description = "경도, 위도, 카테고리, 정렬 기준을 기반으로 검색 - 예시 데이터 경도: 127.0965824, 위도: 37.47153792 - 서울특별시 강남구 자곡로 116(도서관 쉼터)")
+    @Operation(summary = "검색", description = "경도, 위도, 카테고리, 정렬 기준을 기반으로 검색, page는 0부터 시작, hasNext가 false이면 다음 데이터 X - 예시 데이터 경도: 127.0965824, 위도: 37.47153792 - 서울특별시 강남구 자곡로 116(도서관 쉼터)")
     @GetMapping("/search")
     public ResponseEntity<ResponseTemplate<?>> searchPlaces(
             @RequestParam double longitude,

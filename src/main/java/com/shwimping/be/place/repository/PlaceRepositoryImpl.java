@@ -49,7 +49,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .fetch();
     }
 
-    private OrderSpecifier<?> orderExpression(SortType sortType, double longitude, double latitude) {
+    private OrderSpecifier<? extends Number> orderExpression(SortType sortType, double longitude, double latitude) {
         return switch (sortType) {
             case STAR_DESC -> review.rating.avg().coalesce(0.0).desc(); // 평점이 높은 순으로 정렬
             case DISTANCE_ASC -> distanceTemplate(longitude, latitude).asc(); // 거리순으로 정렬
@@ -59,5 +59,14 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     private NumberTemplate<Long> distanceTemplate(double longitude, double latitude) {
         return Expressions.numberTemplate(Long.class,
                 "ST_Distance_Sphere(point({0}, {1}), point(place.longitude, place.latitude))", longitude, latitude);
+    }
+
+    public Long countByLocationWithDistance(
+            double longitude, double latitude, int maxDistant, List<Category> categoryList) {
+
+        return jpaQueryFactory.select(place.count())
+                .from(place)
+                .where(distanceTemplate(longitude, latitude).loe(maxDistant), place.category.in(categoryList))
+                .fetchOne();
     }
 }

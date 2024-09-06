@@ -3,6 +3,7 @@ package com.shwimping.be.place.application;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.MapPlaceResponse;
+import com.shwimping.be.place.dto.response.SearchPlaceResponse;
 import com.shwimping.be.place.dto.response.SearchPlaceResponseList;
 import com.shwimping.be.place.repository.PlaceRepository;
 import com.shwimping.be.place.repository.mongo.MongoPlaceRepository;
@@ -30,9 +31,18 @@ public class PlaceService {
     }
 
     public SearchPlaceResponseList findNearestPlaces(
-            double longitude, double latitude, int maxDistant, List<Category> categoryList, SortType sortType, long page) {
+            double longitude, double latitude, int maxDistant, List<Category> categoryList, SortType sortType,
+            long page) {
 
-        return SearchPlaceResponseList.of(page,
-                placeRepository.findAllByLocationWithDistance(longitude, latitude, maxDistant, categoryList, sortType, page));
+        List<SearchPlaceResponse> allSearchResult = placeRepository.findAllByLocationWithDistance(
+                longitude, latitude, maxDistant, categoryList, sortType, page);
+
+        // 전체 데이터 수 카운트
+        long totalCount = placeRepository.countByLocationWithDistance(longitude, latitude, maxDistant, categoryList);
+
+        // hasNext 계산: 현재 페이지의 데이터 수가 10개이고 전체 데이터 수가 page가 끝나는 지점보다 클 경우 false
+        boolean hasNext = allSearchResult.size() == 10 && (page + 1) * 10 < totalCount;
+
+        return SearchPlaceResponseList.of(page, hasNext, longitude, latitude, allSearchResult);
     }
 }
