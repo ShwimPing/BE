@@ -1,6 +1,5 @@
 package com.shwimping.be.auth.util.kakao;
 
-import com.shwimping.be.auth.dto.response.KakaoTokens;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

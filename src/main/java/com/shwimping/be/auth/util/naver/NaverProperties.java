@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "spring.security.oauth.naver")
 public record NaverProperties(
         String clientId,
-        String clientSecret,
-        String redirectUri
+        String clientSecret
 ) {
 }

@@ -2,7 +2,6 @@ package com.shwimping.be.auth.util.naver;
 
 import com.shwimping.be.auth.dto.request.OAuthLoginParams;
 import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
-import com.shwimping.be.auth.dto.response.NaverTokens;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.auth.util.OAuthApiClient;
 import lombok.RequiredArgsConstructor;

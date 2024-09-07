@@ -1,4 +1,4 @@
-package com.shwimping.be.auth.dto.response;
+package com.shwimping.be.auth.util.naver;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
