@@ -14,7 +14,7 @@ public interface NaverTokenClient {
             @RequestParam("grant_type") String grantType,
             @RequestParam("client_id") String clientId,
             @RequestParam("client_secret") String clientSecret,
-            @RequestParam("redirect_uri") String redirectUri,
+            @RequestParam("code") String code,
             @RequestParam("state") String state
     );
 }

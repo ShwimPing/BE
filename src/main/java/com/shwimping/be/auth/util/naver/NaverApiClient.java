@@ -25,7 +25,7 @@ public class NaverApiClient implements OAuthApiClient {
     @Override
     public String requestAccessToken(OAuthLoginParams params, OAuthLoginRequest request) {
         NaverTokens response = naverTokenClient.requestAccessToken(GRANT_TYPE, naverProperties.clientId(),
-                naverProperties.clientSecret(), naverProperties.redirectUri(), request.state());
+                naverProperties.clientSecret(), request.authCode(), request.state());
 
         assert response != null;
         return response.accessToken();
