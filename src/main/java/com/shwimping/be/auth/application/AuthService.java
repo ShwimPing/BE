@@ -16,6 +16,7 @@ import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
+import com.shwimping.be.user.dto.request.SaveProfileRequest;
 import com.shwimping.be.user.exception.InvalidPasswordException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,14 @@ public class AuthService {
 
     public void signUp(CreateUserRequest request) {
         userService.createUser(request);
+    }
+
+    public boolean validateNickname(String nickname) {
+        return userService.validateNickname(nickname);
+    }
+
+    public void saveProfile(Long userId, SaveProfileRequest request) {
+        userService.saveProfile(userId, request);
     }
 
     public LoginResponse selfLogin(LoginRequest request, HttpServletResponse response) {
