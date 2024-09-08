@@ -1,14 +1,10 @@
 package com.shwimping.be.auth.application;
 
-import com.shwimping.be.auth.application.exception.InvalidProviderException;
 import com.shwimping.be.auth.application.exception.InvalidTokenException;
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.Tokens;
-import com.shwimping.be.auth.dto.request.KakaoLoginParams;
-import com.shwimping.be.auth.dto.request.NaverLoginParams;
 import com.shwimping.be.auth.dto.request.LoginRequest;
-import com.shwimping.be.auth.dto.request.OAuthLoginParams;
 import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
@@ -24,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_PROVIDER;
 import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_REFRESH_TOKEN;
 import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID_JWT;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_PASSWORD;
@@ -67,21 +62,9 @@ public class AuthService {
     }
 
     public LoginResponse socialLogin(Provider provider, OAuthLoginRequest request, HttpServletResponse response) {
-        OAuthLoginParams oAuthLoginParams = generateOAuthLoginParams(provider, request);
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(oAuthLoginParams, request);
-
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(provider, request);
         User user = userService.findOrCreateUser(oAuthInfoResponse);
-
         return getLoginResponse(response, user);
-    }
-
-    // Provider 에 따라 OAuthLoginParams 생성
-    private OAuthLoginParams generateOAuthLoginParams(Provider provider, OAuthLoginRequest request) {
-        return switch (provider) {
-            case KAKAO -> new KakaoLoginParams(request.authCode(), provider);
-            case NAVER -> new NaverLoginParams(request.authCode(), request.state(), provider);
-            default -> throw new InvalidProviderException(INVALID_PROVIDER);
-        };
     }
 
     // JWT 토큰 발급 및 AccessToken, RefreshToken 반환

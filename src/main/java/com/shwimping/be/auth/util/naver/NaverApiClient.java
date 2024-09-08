@@ -1,6 +1,5 @@
 package com.shwimping.be.auth.util.naver;
 
-import com.shwimping.be.auth.dto.request.OAuthLoginParams;
 import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.auth.util.OAuthApiClient;
@@ -9,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.util.UUID;
 
 @Slf4j
 @Component("naver")
@@ -22,9 +23,9 @@ public class NaverApiClient implements OAuthApiClient {
     private final NaverUserClient naverUserClient;
 
     @Override
-    public String requestAccessToken(OAuthLoginParams params, OAuthLoginRequest request) {
+    public String requestAccessToken(OAuthLoginRequest request) {
         NaverTokens response = naverTokenClient.requestAccessToken(GRANT_TYPE, naverProperties.clientId(),
-                naverProperties.clientSecret(), request.authCode(), request.state());
+                naverProperties.clientSecret(), request.authCode(), generateState());
 
         assert response != null;
         return response.accessToken();
@@ -34,5 +35,9 @@ public class NaverApiClient implements OAuthApiClient {
     public OAuthInfoResponse requestOauthInfo(String accessToken) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         return naverUserClient.requestOauthInfo("Bearer " + accessToken, body);
+    }
+
+    private String generateState() {
+        return UUID.randomUUID().toString();
     }
 }
