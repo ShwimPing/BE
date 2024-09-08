@@ -1,13 +1,17 @@
 package com.shwimping.be.auth.util.kakao;
 
+import com.shwimping.be.auth.application.exception.InvalidTokenException;
 import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.auth.util.OAuthApiClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_TOKEN;
 
 @Slf4j
 @Component("kakao")
@@ -24,7 +28,10 @@ public class KakaoApiClient implements OAuthApiClient {
     public String requestAccessToken(OAuthLoginRequest request) {
         KakaoTokens response = kakaoTokenClient.requestAccessToken(GRANT_TYPE, kakaoProperties.clientId(), kakaoProperties.redirectUri(), request.authCode());
 
-        assert response != null;
+        if (!ObjectUtils.allNotNull(response)) {
+            throw new InvalidTokenException(INVALID_TOKEN);
+        }
+
         return response.accessToken();
     }
 

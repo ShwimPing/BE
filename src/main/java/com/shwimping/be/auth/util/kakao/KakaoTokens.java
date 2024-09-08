@@ -1,13 +1,15 @@
 package com.shwimping.be.auth.util.kakao;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record KakaoTokens(
-        @JsonProperty("access_token") String accessToken,
-        @JsonProperty("token_type") String tokenType,
-        @JsonProperty("refresh_token") String refreshToken,
-        @JsonProperty("expires_in") String expiresIn,
-        @JsonProperty("refresh_token_expires_in") String refreshTokenExpiresIn,
-        @JsonProperty("scope") String scope
+        String accessToken,
+        String tokenType,
+        String refreshToken,
+        String expiresIn,
+        String refreshTokenExpiresIn,
+        String scope
 ) {
 }

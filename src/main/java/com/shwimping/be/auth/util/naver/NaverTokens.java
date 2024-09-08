@@ -1,11 +1,13 @@
 package com.shwimping.be.auth.util.naver;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record NaverTokens(
-        @JsonProperty("access_token") String accessToken,
-        @JsonProperty("refresh_token") String refreshToken,
-        @JsonProperty("token_type") String tokenType,
-        @JsonProperty("expires_in") String expiresIn
+        String accessToken,
+        String refreshToken,
+        String tokenType,
+        String expiresIn
 ) {
 }
