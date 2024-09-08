@@ -58,8 +58,8 @@ cloud:
       access-key: thisisaccesskey
       secret-key: thisissecretkey
     s3:
-      endpoint: https://kr.object.ncloudstorage.com
-      bucket: contest84-objectstorage
+      endpoint: endpoint
+      bucket: bucketname
     region:
       static-value: kr-standard
 
