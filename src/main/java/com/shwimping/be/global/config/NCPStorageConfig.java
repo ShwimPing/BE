@@ -4,30 +4,25 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import com.shwimping.be.global.util.NCPProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@RequiredArgsConstructor
 @Configuration
 public class NCPStorageConfig {
 
-    @Value("${cloud.aws.credentials.access-key}")
-    private String accessKey;
-
-    @Value("${cloud.aws.credentials.secret-key}")
-    private String secretKey;
-
-    @Value("${cloud.aws.s3.endpoint}")
-    private String endPoint;
-
-    @Value("${cloud.aws.region.static}")
-    private String region;
+    private final NCPProperties ncpProperties;
 
     @Bean
     public AmazonS3 amazonS3() {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        BasicAWSCredentials awsCredentials =
+                new BasicAWSCredentials(ncpProperties.credentialsAccessKey(), ncpProperties.credentialsSecretKey());
+
         return AmazonS3ClientBuilder.standard()
-                .withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(endPoint, region))
+                .withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(
+                        ncpProperties.s3Endpoint(), ncpProperties.regionStaticValue()))
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
     }
