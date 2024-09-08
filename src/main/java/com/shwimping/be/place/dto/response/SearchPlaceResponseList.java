@@ -10,10 +10,11 @@ public record SearchPlaceResponseList(
         Double longitude,
         Double latitude,
         Integer maxDistance,
+        String keyWord,
         List<SearchPlaceResponse> placeList
 ) {
     public static SearchPlaceResponseList of(
-            Long page, Boolean hasNext, Double longitude, Double latitude, Integer maxDistance, List<SearchPlaceResponse> placeList) {
+            Long page, Boolean hasNext, Double longitude, Double latitude, Integer maxDistance, String keyWord, List<SearchPlaceResponse> placeList) {
         return SearchPlaceResponseList.builder()
                 .page(page)
                 .placeList(placeList)
@@ -21,6 +22,7 @@ public record SearchPlaceResponseList(
                 .latitude(latitude)
                 .hasNext(hasNext)
                 .maxDistance(maxDistance)
+                .keyWord(keyWord)
                 .build();
     }
 }
