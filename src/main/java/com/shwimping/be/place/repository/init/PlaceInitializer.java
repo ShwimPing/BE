@@ -6,7 +6,6 @@ import com.shwimping.be.global.util.DummyDataInit;
 import com.shwimping.be.place.domain.Place;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.repository.PlaceRepository;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.geo.Point;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,7 +42,7 @@ public class PlaceInitializer implements ApplicationRunner {
     private void importCsvToPlace(String filePath, int addressIdx, int longitudeIdx, int latitudeIdx, Category category,
                                   int nameIdx, int regionIdx, int openTimeIdx, int closeTimeIdx) {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
-             Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)
         ) {
             CSVReader csvReader = new CSVReader(reader);
             String[] nextLine;
@@ -72,15 +69,14 @@ public class PlaceInitializer implements ApplicationRunner {
                     restInfo = nextLine[9];
                 }
 
-                Point location = new GeoJsonPoint(longitude, latitude);
-
                 Place place = Place.builder()
                         .name(name)
                         .region(region)
                         .openTime(openTime)
                         .closeTime(closeTime)
                         .address(address)
-                        .location(location)
+                        .longitude(longitude)
+                        .latitude(latitude)
                         .category(category)
                         .restInfo(restInfo)
                         .build();

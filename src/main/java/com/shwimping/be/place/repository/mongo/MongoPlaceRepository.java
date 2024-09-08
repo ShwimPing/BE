@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface MongoPlaceRepository extends MongoRepository<MongoPlace, String> {
 
     @Query("{ location: { $near: { $geometry: { type: 'Point', coordinates: [?0, ?1] }, $maxDistance: ?2 } }, category: { $in: ?3 } }")
-    List<MongoPlace> findByLocationNear(double longitude, double latitude, double maxDistance, List<Category> categories);
+    List<MongoPlace> findAllByLocationNear(double longitude, double latitude, double maxDistance, List<Category> categories);
 }

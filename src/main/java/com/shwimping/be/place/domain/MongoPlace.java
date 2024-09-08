@@ -33,7 +33,7 @@ public class MongoPlace {
     private GeoJsonPoint location;
 
     @Indexed(unique = true)
-    @Field(name = "placeId")
+    @Field(name = "place_id")
     private Long placeId;
 
     @Builder

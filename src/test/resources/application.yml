@@ -21,11 +21,47 @@ spring:
       max-file-size: 10MB # 최대 파일 사이즈
       max-request-size: 20MB # 최대 요청 사이즈
 
+  security:
+    oauth:
+      naver:
+        client-id: thisisclientid
+        client-secret: thisisclientsecret
+        redirect-uri: thisisredirecturi
+        feign:
+          token-url: thisistokenurl
+          user-url: thisisuserurl
+      kakao:
+        client-id: thisisclientid
+        client-secret: thisisclientsecret
+        redirect-uri: thisisredirecturi
+        feign:
+          token-url: thisistokenurl
+          user-url: thisisuserurl
+
+  ai:
+    openai:
+      api-key: thisisapikey
+      chat:
+        options:
+          model: gpt-3.5-turbo
+          temperature: 0.6
+
 jwt:
   secret-key: thisistestsecretkeythisistestsecretkeythisistestsecretkey
   issuer: shwimpingtest
   access-token-expiration: 3600000 # 1시간 (1000(ms -> s) * 60(s -> m) * 60(m -> h))
   refresh-token-expiration: 1209600000 # 2주 (1000(ms -> s) * 60(s -> m) * 60(m -> h) * 24(h -> 하루) * 14(2주))
+
+cloud:
+  aws:
+    credentials:
+      access-key: thisisaccesskey
+      secret-key: thisissecretkey
+    s3:
+      endpoint: endpoint
+      bucket: bucketname
+    region:
+      static-value: kr-standard
 
 server:
   env: test
