@@ -25,39 +25,31 @@ public class AIService {
 
     private final ChatModel chatModel;
 
-    public void getResponse(String message) {
+    public GetShelterRecommendAIResponse getResponse(String message) {
         Message userMessage = getMessage(message);
 
         String response = chatModel.call(userMessage);
         log.info("response: {}", response);
 
-        GetShelterRecommendAIResponse getShelterRecommendAIResponse = convertResponseToObject(response);
-        log.info("getShelterRecommendAIResponse: {}", getShelterRecommendAIResponse);
-
-        LocalDate today = LocalDate.now();
-        int month = today.getMonthValue();
-
-        // 카테고리 추가 로직은 여기서 처리할 수 있습니다.
-        if (month >= 6 && month <= 9) {
-            // 여름철 추가
-        } else if (month >= 11 || month <= 3) {
-            // 겨울철 추가
-        }
+        return convertResponseToObject(response);
     }
 
     private Message getMessage(String message) {
         String command = "사용자의 요청을 분석하여 정보를 제공해줘. \n" +
                 "1. distance (m 단위로) \n" +
                 "2. category (SMART, LIBRARY, TOGETHER) - 여러 개 가능 \n" +
-                "3. sortType (STAR_DESC 또는 DISTANCE_ASC) \n\n" +
+                "3. sortType (STAR_DESC 또는 DISTANCE_ASC) \n" +
+                "4. kwyWord (검색어) \n\n" +
                 "예시: \n" +
                 "distance: 3000 (사용자가 '3km 안에'라고 했을 때) \n" +
                 "category: SMART, TOGETHER, LIBRARY (항상 추가)" +
-                "sortType: DISTANCE_ASC (가까운 순으로), STAR_DESC (평점이 좋은 순으로) \n\n" +
+                "sortType: DISTANCE_ASC (가까운 순으로), STAR_DESC (평점이 좋은 순으로) \n" +
+                "keyWord: 못골 (이름에 못골이 들어간 장소를 찾아줘, 이름에 대한 명시가 없으면 설정 X, 쉴 수 있는 곳을 찾아줘는 쉴 수 있는 곳 반환 X) \n\n" +
                 "기본값: \n" +
                 "distance: 2000 (입력하지 않을 경우) \n" +
                 "category: SMART, TOGETHER, LIBRARY (입력하지 않을 경우 모두 기본 값)\n" +
                 "sortType: DISTANCE_ASC (입력하지 않을 경우) \n" +
+                "keyWord:  (입력하지 않을 경우) \n\n" +
                 "예외 사항: \n" +
                 "category: SMART(스마트 쉼터 제외 요청시 제외), TOGETHER(기후동행쉼터 제외 요청시 제외), LIBRARY(도서관 제외 요청시 제외)\n\n" +
                 "사용자의 메시지를 위 정보에 기반하여 분석해서 JSON 형식으로 반환해줘. : " + message;
@@ -75,15 +67,24 @@ public class AIService {
         try {
             JsonNode jsonNode = objectMapper.readTree(response);
 
-            Long distance = jsonNode.get("distance").asLong();
+            int distance = jsonNode.get("distance").asInt();
             List<Category> categories = objectMapper.convertValue(
                     jsonNode.get("category"),
                     objectMapper.getTypeFactory().constructCollectionType(List.class, Category.class)
             );
+
+            int month = LocalDate.now().getMonthValue();
+
+            if (month >= 6 && month <= 9) {
+                categories.add(Category.HOT);
+            } else if (month >= 11 || month <= 3) {
+                categories.add(Category.COLD);
+            }
+
             SortType sortType = SortType.valueOf(jsonNode.get("sortType").asText());
+            String keyWord = jsonNode.get("keyWord").asText();
 
-            return new GetShelterRecommendAIResponse(distance, categories, sortType);
-
+            return new GetShelterRecommendAIResponse(distance, categories, sortType, keyWord);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("JSON 형식 변환 중 오류가 발생했습니다.");
         }

@@ -9,16 +9,18 @@ public record SearchPlaceResponseList(
         Boolean hasNext,
         Double longitude,
         Double latitude,
+        Integer maxDistance,
         List<SearchPlaceResponse> placeList
 ) {
     public static SearchPlaceResponseList of(
-            Long page, Boolean hasNext, Double longitude, Double latitude, List<SearchPlaceResponse> placeList) {
+            Long page, Boolean hasNext, Double longitude, Double latitude, Integer maxDistance, List<SearchPlaceResponse> placeList) {
         return SearchPlaceResponseList.builder()
                 .page(page)
                 .placeList(placeList)
                 .longitude(longitude)
                 .latitude(latitude)
                 .hasNext(hasNext)
+                .maxDistance(maxDistance)
                 .build();
     }
 }

@@ -44,7 +44,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .from(place)
                 .leftJoin(place.reviewList, review)
                 .where(distanceTemplate(longitude, latitude).loe(maxDistance), place.category.in(categoryList),
-                        keywordExpression(keyword))
+                        keywordSearchExpression(keyword))
                 .groupBy(place.id)
                 .orderBy(orderExpression(sortType, longitude, latitude)) // 정렬 조건 추가
                 .offset(page * 10) // 페이지 번호에 따라 결과를 10개씩 가져오도록 설정
@@ -64,7 +64,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 "ST_Distance_Sphere(point({0}, {1}), point(place.longitude, place.latitude))", longitude, latitude);
     }
 
-    private BooleanExpression keywordExpression(String keyword) {
+    private BooleanExpression keywordSearchExpression(String keyword) {
         if (StringUtils.hasText(keyword)) {
             return place.name.contains(keyword).or(place.address.contains(keyword));
         } else {

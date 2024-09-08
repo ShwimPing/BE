@@ -5,8 +5,9 @@ import com.shwimping.be.place.domain.type.Category;
 import java.util.List;
 
 public record GetShelterRecommendAIResponse(
-        Long distance,
+        Integer distance,
         List<Category> category,
-        SortType sortType
+        SortType sortType,
+        String keyWord
 ) {
 }
