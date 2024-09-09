@@ -139,6 +139,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .where(place.id.eq(placeId))
                 .fetchOne();
 
-        return new PlaceDetailWithReviews(0L, hasNext, placeDetailResponse, recentReviews);
+        return new PlaceDetailWithReviews(hasNext, placeDetailResponse, recentReviews);
     }
 }

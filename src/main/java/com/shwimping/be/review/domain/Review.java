@@ -13,7 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,7 +38,7 @@ public class Review {
 
     @CreatedDate
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Column(name = "rating", nullable = false, precision = 2, scale = 1)
     private BigDecimal rating;
@@ -55,9 +55,8 @@ public class Review {
     private Place place;
 
     @Builder
-    public Review(String content, LocalDate date, BigDecimal rating, String reviewImageUrl, User user, Place place) {
+    public Review(String content, BigDecimal rating, String reviewImageUrl, User user, Place place) {
         this.content = content;
-        this.date = date;
         this.rating = rating;
         this.reviewImageUrl = reviewImageUrl;
         this.user = user;

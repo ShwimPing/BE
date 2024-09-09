@@ -92,7 +92,7 @@ public class PlaceController {
                 .body(ResponseTemplate.from(shelterRecommendAI));
     }
 
-    @Operation(summary = "장소 상세 조회", description = "장소 상세 정보와 리뷰를 조회")
+    @Operation(summary = "장소 상세 조회", description = "장소 상세 정보와 리뷰를 조회 - 최신순")
     @GetMapping("/detail")
     public ResponseEntity<ResponseTemplate<?>> getPlaceDetail(
             @AuthenticationPrincipal Long userId,
