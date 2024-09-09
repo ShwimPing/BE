@@ -1,4 +1,4 @@
-package com.shwimping.be.auth.application.jwt.filter;
+package com.shwimping.be.auth.presentation.filter;
 
 import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.global.util.AuthenticationUtil;

@@ -1,4 +1,4 @@
-package com.shwimping.be.auth.application.jwt.filter;
+package com.shwimping.be.auth.presentation.filter;
 
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

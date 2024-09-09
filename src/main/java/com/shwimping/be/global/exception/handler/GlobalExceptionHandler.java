@@ -1,5 +1,6 @@
 package com.shwimping.be.global.exception.handler;
 
+import com.shwimping.be.auth.application.exception.InvalidProviderException;
 import com.shwimping.be.auth.application.exception.InvalidTokenException;
 import com.shwimping.be.global.exception.FileConvertFailException;
 import com.shwimping.be.global.exception.errorcode.ErrorCode;
@@ -77,6 +78,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidEmailException.class)
     public ResponseEntity<Object> handleInvalidEmail(final InvalidEmailException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(InvalidProviderException.class)
+    public ResponseEntity<Object> handleInvalidProvider(final InvalidProviderException e) {
         return handleExceptionInternal(e.getErrorCode());
     }
 

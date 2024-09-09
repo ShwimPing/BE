@@ -1,4 +1,4 @@
-package com.shwimping.be.auth.application.jwt.filter;
+package com.shwimping.be.auth.presentation.filter;
 
 import com.shwimping.be.global.util.ErrorResponseUtil;
 import jakarta.servlet.ServletException;

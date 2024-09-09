@@ -1,4 +1,4 @@
-package com.shwimping.be.auth.application.jwt.filter;
+package com.shwimping.be.auth.presentation.filter;
 
 import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_TOKEN;
 import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID_JWT;

@@ -2,9 +2,12 @@ package com.shwimping.be.auth.presentation;
 
 import com.shwimping.be.auth.application.AuthService;
 import com.shwimping.be.auth.dto.request.LoginRequest;
+import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.global.dto.ResponseTemplate;
+import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
+import com.shwimping.be.user.dto.request.SaveProfileRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +30,21 @@ import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
 public class AuthController {
 
     private final AuthService authService;
+
+    @Operation(summary = "소셜 로그인 / 회원가입", description = "소셜 로그인 및 회원가입<br>" +
+            "사용자가 로그인 연동 후 받게 되는 인가 코드(code)를 authCode에 넣어주세요.")
+    @PostMapping("/login/{provider}")
+    public ResponseEntity<ResponseTemplate<Object>> socialLogin(
+            @PathVariable Provider provider,
+            @RequestBody OAuthLoginRequest request,
+            HttpServletResponse response) {
+
+        LoginResponse socialResponse = authService.socialLogin(provider, request, response);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.from(socialResponse));
+    }
 
     @Operation(summary = "자체 회원가입", description = "소셜 로그인 없는 자체 회원가입")
     @PostMapping("/signup")
@@ -51,6 +69,31 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseTemplate.from(loginResponse));
+    }
+
+    @Operation(summary = "닉네임 중복 검사", description = "닉네임이 존재하면 true, 존재하지 않으면 false를 반환합니다")
+    @GetMapping("/nickname/validation")
+    public ResponseEntity<ResponseTemplate<Object>> validateNickname(
+            @Valid @RequestParam String nickname) {
+
+        boolean response = authService.validateNickname(nickname);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.from(response));
+    }
+
+    @Operation(summary = "프로필 등록", description = "회원가입 후 닉네임, 프로필 사진, 토큰을 등록합니다")
+    @PostMapping("/profile")
+    public ResponseEntity<ResponseTemplate<Object>> saveProfile(
+            @AuthenticationPrincipal Long userId,
+            @Valid @RequestBody SaveProfileRequest request) {
+
+        authService.saveProfile(userId, request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(EMPTY_RESPONSE);
     }
 
     @Operation(summary = "Access Token 재발급", description = "토큰 재발급시 Authorization에 'Bearer ' 없이 refresh Token만 입력해주세요")

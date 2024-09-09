@@ -3,7 +3,6 @@ package com.shwimping.be.user.dto.request;
 import com.shwimping.be.user.domain.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -14,20 +13,20 @@ public record CreateUserRequest(
     String email,
     @Size(min = 8, message = "비밀번호를 8자 이상 입력해주세요")
     @NotBlank(message = "비밀번호를 입력해주세요")
-    String password,
-    @NotEmpty(message = "토큰을 입력해주세요")
-    String fcmToken
+    String password
 ) {
     public User toUser(PasswordEncoder passwordEncoder) {
+        String temporal = "temporal";
+
         return User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .fcmToken(fcmToken)
+                .fcmToken(temporal)
                 .provider(SELF)
-                .nickname("temporal")
+                .nickname(temporal)
                 .isAlarmAllowed(true)
-                .profileImageUrl("temporal.png")
-                .nowLocation("temporal")
+                .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                .nowLocation(temporal)
                 .build();
     }
 }

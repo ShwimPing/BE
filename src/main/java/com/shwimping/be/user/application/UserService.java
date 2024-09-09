@@ -1,7 +1,10 @@
 package com.shwimping.be.user.application;
 
+import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.user.domain.User;
+import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
+import com.shwimping.be.user.dto.request.SaveProfileRequest;
 import com.shwimping.be.user.exception.InvalidEmailException;
 import com.shwimping.be.user.exception.UserNotFoundException;
 import com.shwimping.be.user.repository.UserRepository;
@@ -25,12 +28,30 @@ public class UserService {
 
     @Transactional
     public void createUser(CreateUserRequest request) {
-        if (!userRepository.existsByEmail(request.email())) {
+        if (!userRepository.existsByEmailAndProvider(request.email(), Provider.SELF)) {
             User user = request.toUser(passwordEncoder);
             userRepository.save(user);
         } else {
             throw new InvalidEmailException(INVALID_EMAIL);
         }
+    }
+
+    @Transactional
+    public User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
+        return userRepository.findBySocialId(oAuthInfoResponse.getId())
+                .orElseGet(() -> getUser(oAuthInfoResponse));
+    }
+
+    @Transactional
+    public void saveProfile(Long userId, SaveProfileRequest request) {
+        User user = getUserById(userId);
+        user.updateProfile(request);
+    }
+
+    private User getUser(OAuthInfoResponse oAuthInfoResponse) {
+        User user = User.from(oAuthInfoResponse);
+        userRepository.save(user);
+        return user;
     }
 
     @Transactional
@@ -63,5 +84,9 @@ public class UserService {
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+    }
+
+    public boolean validateNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 }

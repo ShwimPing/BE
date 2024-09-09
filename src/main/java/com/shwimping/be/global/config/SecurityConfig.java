@@ -1,9 +1,9 @@
 package com.shwimping.be.global.config;
 
-import com.shwimping.be.auth.application.jwt.filter.JwtAccessDeniedHandler;
-import com.shwimping.be.auth.application.jwt.filter.JwtAuthenticationEntryPoint;
-import com.shwimping.be.auth.application.jwt.filter.JwtAuthenticationFilter;
-import com.shwimping.be.auth.application.jwt.filter.MapAuthenticationFilter;
+import com.shwimping.be.auth.presentation.filter.JwtAccessDeniedHandler;
+import com.shwimping.be.auth.presentation.filter.JwtAuthenticationEntryPoint;
+import com.shwimping.be.auth.presentation.filter.JwtAuthenticationFilter;
+import com.shwimping.be.auth.presentation.filter.MapAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

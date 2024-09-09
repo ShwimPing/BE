@@ -5,10 +5,14 @@ import com.shwimping.be.auth.application.jwt.JwtTokenProvider;
 import com.shwimping.be.auth.application.jwt.JwtUserDetails;
 import com.shwimping.be.auth.application.jwt.Tokens;
 import com.shwimping.be.auth.dto.request.LoginRequest;
+import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
+import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.domain.User;
+import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
+import com.shwimping.be.user.dto.request.SaveProfileRequest;
 import com.shwimping.be.user.exception.InvalidPasswordException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ public class AuthService {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RequestOAuthInfoService requestOAuthInfoService;
     private final PasswordEncoder passwordEncoder;
 
     public JwtUserDetails getJwtUserDetails(Long userId) {
@@ -38,6 +43,14 @@ public class AuthService {
         userService.createUser(request);
     }
 
+    public boolean validateNickname(String nickname) {
+        return userService.validateNickname(nickname);
+    }
+
+    public void saveProfile(Long userId, SaveProfileRequest request) {
+        userService.saveProfile(userId, request);
+    }
+
     public LoginResponse selfLogin(LoginRequest request, HttpServletResponse response) {
         User user = userService.getUserByEmail(request.email());
 
@@ -45,12 +58,24 @@ public class AuthService {
             throw new InvalidPasswordException(INVALID_PASSWORD);
         }
 
+        return getLoginResponse(response, user);
+    }
+
+    public LoginResponse socialLogin(Provider provider, OAuthLoginRequest request, HttpServletResponse response) {
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(provider, request);
+        User user = userService.findOrCreateUser(oAuthInfoResponse);
+        return getLoginResponse(response, user);
+    }
+
+    // JWT 토큰 발급 및 AccessToken, RefreshToken 반환
+    private LoginResponse getLoginResponse(HttpServletResponse response, User user) {
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
         response.setHeader("Refresh-Token", tokens.refreshToken());
 
         return LoginResponse.from(tokens);
     }
 
+    // AccessToken 재발급
     public LoginResponse reIssueToken(String refreshToken) {
         if (jwtTokenProvider.validateToken(refreshToken) == VALID_JWT) {
             Long userId = jwtTokenProvider.getJwtUserDetails(refreshToken).userId();
