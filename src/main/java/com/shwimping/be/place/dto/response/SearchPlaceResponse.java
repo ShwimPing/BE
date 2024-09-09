@@ -15,7 +15,8 @@ public record SearchPlaceResponse(
         LocalTime openTime,
         @JsonFormat(pattern = "HH:mm")
         LocalTime closeTime,
-        Double rating
+        Double rating,
+        Long reviewCount
 ) {
     @JsonProperty("rating")
     public Double getFormattedRating() {

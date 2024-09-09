@@ -38,6 +38,8 @@ public class ReviewInitializer implements ApplicationRunner {
 
             User user1 = userRepository.findById(1L).orElseThrow();
             User user2 = userRepository.findById(2L).orElseThrow();
+            User user3 = userRepository.findById(3L).orElseThrow();
+
 
             List<Review> reviewList = new ArrayList<>();
 
@@ -73,10 +75,24 @@ public class ReviewInitializer implements ApplicationRunner {
 
             Review DUMMY_REVIEW5 = Review.builder()
                     .place(place3)
-                    .rating(BigDecimal.valueOf(4.5))
+                    .rating(BigDecimal.valueOf(3.5))
                     .content("좋아요")
                     .date(LocalDate.now())
                     .user(user1)
+                    .build();
+            Review DUMMY_REVIEW6 = Review.builder()
+                    .place(place3)
+                    .rating(BigDecimal.valueOf(3.5))
+                    .content("좋아요")
+                    .date(LocalDate.now())
+                    .user(user2)
+                    .build();
+            Review DUMMY_REVIEW7 = Review.builder()
+                    .place(place3)
+                    .rating(BigDecimal.valueOf(3.5))
+                    .content("좋아요")
+                    .date(LocalDate.now())
+                    .user(user3)
                     .build();
 
             reviewList.add(DUMMY_REVIEW1);
@@ -84,6 +100,8 @@ public class ReviewInitializer implements ApplicationRunner {
             reviewList.add(DUMMY_REVIEW3);
             reviewList.add(DUMMY_REVIEW4);
             reviewList.add(DUMMY_REVIEW5);
+            reviewList.add(DUMMY_REVIEW6);
+            reviewList.add(DUMMY_REVIEW7);
 
             reviewRepository.saveAll(reviewList);
         }

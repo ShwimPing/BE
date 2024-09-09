@@ -62,7 +62,7 @@ public class PlaceController {
             @RequestParam int maxDistance,
             @RequestParam List<Category> category,
             @RequestParam SortType sortType,
-            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "") String keyword,
             @RequestParam int page) {
 
         SearchPlaceResponseList nearestPlaces =

@@ -45,6 +45,7 @@ public class PlaceService {
         // hasNext 계산: 현재 페이지의 데이터 수가 10개이고 전체 데이터 수가 page가 끝나는 지점보다 클 경우 false
         boolean hasNext = allSearchResult.size() == 10 && (page + 1) * 10 < totalCount;
 
-        return SearchPlaceResponseList.of(page, hasNext, longitude, latitude, maxDistant, keyword, sortType, allSearchResult);
+        return SearchPlaceResponseList.of(page, hasNext, longitude, latitude, maxDistant, keyword, sortType,
+                categoryList, allSearchResult);
     }
 }
