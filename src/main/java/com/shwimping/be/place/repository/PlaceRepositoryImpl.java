@@ -38,7 +38,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                                 place.category,
                                 place.openTime,
                                 place.closeTime,
-                                review.rating.avg().coalesce(0.0) // 평균 평점을 가져오고 null일 경우 0으로 대체
+                                review.rating.avg().coalesce(0.0), // 평균 평점을 가져오고 null일 경우 0으로 대체
+                                review.id.count().coalesce(0L) // 리뷰 수
                         )
                 )
                 .from(place)
@@ -46,17 +47,22 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .where(distanceTemplate(longitude, latitude).loe(maxDistance), place.category.in(categoryList),
                         keywordSearchExpression(keyword))
                 .groupBy(place.id)
-                .orderBy(orderExpression(sortType, longitude, latitude)) // 정렬 조건 추가
+                .orderBy(orderExpression(sortType, longitude, latitude), reviewCntOrder()) // 정렬 조건 추가
                 .offset(page * 10) // 페이지 번호에 따라 결과를 10개씩 가져오도록 설정
                 .limit(10)
                 .fetch();
     }
 
-    private OrderSpecifier<? extends Number> orderExpression(SortType sortType, double longitude, double latitude) {
+    private OrderSpecifier<?> orderExpression(SortType sortType, double longitude, double latitude) {
         return switch (sortType) {
-            case STAR_DESC -> review.rating.avg().coalesce(0.0).desc(); // 평점이 높은 순으로 정렬
+            case STAR_DESC -> review.rating.avg().coalesce(0.0).desc();
             case DISTANCE_ASC -> distanceTemplate(longitude, latitude).asc(); // 거리순으로 정렬
         };
+    }
+
+    // 리뷰 수로 정렬 - 다른 정렬 조건으로 정렬한 후에
+    private OrderSpecifier<?> reviewCntOrder() {
+        return review.id.count().coalesce(0L).desc();
     }
 
     private NumberTemplate<Long> distanceTemplate(double longitude, double latitude) {

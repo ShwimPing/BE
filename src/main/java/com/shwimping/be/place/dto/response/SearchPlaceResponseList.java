@@ -1,6 +1,7 @@
 package com.shwimping.be.place.dto.response;
 
 import com.shwimping.be.place.application.type.SortType;
+import com.shwimping.be.place.domain.type.Category;
 import java.util.List;
 import lombok.Builder;
 
@@ -13,10 +14,12 @@ public record SearchPlaceResponseList(
         Integer maxDistance,
         String keyWord,
         SortType sortType,
+        List<Category> categoryList,
         List<SearchPlaceResponse> placeList
 ) {
     public static SearchPlaceResponseList of(
-            Long page, Boolean hasNext, Double longitude, Double latitude, Integer maxDistance, String keyWord, SortType sortType, List<SearchPlaceResponse> placeList) {
+            Long page, Boolean hasNext, Double longitude, Double latitude, Integer maxDistance, String keyWord,
+            SortType sortType, List<Category> categoryList, List<SearchPlaceResponse> placeList) {
         return SearchPlaceResponseList.builder()
                 .page(page)
                 .placeList(placeList)
@@ -26,6 +29,7 @@ public record SearchPlaceResponseList(
                 .maxDistance(maxDistance)
                 .keyWord(keyWord)
                 .sortType(sortType)
+                .categoryList(categoryList)
                 .build();
     }
 }
