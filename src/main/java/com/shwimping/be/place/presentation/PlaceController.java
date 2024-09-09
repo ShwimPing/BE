@@ -57,14 +57,14 @@ public class PlaceController {
             "예시 데이터 경도: 127.0965824, 위도: 37.47153792 - 서울특별시 강남구 자곡로 116(도서관 쉼터)")
     @GetMapping("/search")
     public ResponseEntity<ResponseTemplate<?>> searchPlaces(
-            @RequestParam double longitude,
-            @RequestParam double latitude,
-            @RequestParam int maxDistance,
+            @RequestParam Double longitude,
+            @RequestParam Double latitude,
+            @RequestParam Integer maxDistance,
             @RequestParam List<Category> category,
             @RequestParam SortType sortType,
             @RequestParam(defaultValue = "") String keyword,
-            @RequestParam int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
 
         SearchPlaceResponseList nearestPlaces =
                 placeService.findNearestPlaces(longitude, latitude, maxDistance, category, sortType, keyword, page, size);
@@ -80,11 +80,12 @@ public class PlaceController {
             "paging을 통해서 다음 페이지를 보려면 searchPlaces API에 요청")
     @GetMapping("/ai-search")
     public ResponseEntity<ResponseTemplate<?>> getAIResponse(
-            @RequestParam double longitude,
-            @RequestParam double latitude,
-            @RequestParam String message) {
+            @RequestParam Double longitude,
+            @RequestParam Double latitude,
+            @RequestParam String message,
+            @RequestParam(defaultValue = "10") Long size) {
 
-        SearchPlaceResponseList shelterRecommendAI = aiSearchFacade.getShelterRecommendAI(longitude, latitude, message);
+        SearchPlaceResponseList shelterRecommendAI = aiSearchFacade.getShelterRecommendAI(longitude, latitude, message, size);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
