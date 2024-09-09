@@ -95,10 +95,12 @@ public class PlaceController {
     @GetMapping("/detail")
     public ResponseEntity<ResponseTemplate<?>> getPlaceDetail(
             @AuthenticationPrincipal Long userId,
-            @RequestParam Long placeId) {
+            @RequestParam Long placeId,
+            @RequestParam(defaultValue = "5") Long size
+    ) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseTemplate.from(placeService.findPlaceDetail(userId, placeId)));
+                .body(ResponseTemplate.from(placeService.findPlaceDetail(userId, placeId, size)));
     }
 }

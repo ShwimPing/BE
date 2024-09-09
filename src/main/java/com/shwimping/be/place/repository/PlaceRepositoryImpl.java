@@ -92,7 +92,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     @Override
-    public PlaceDetailWithReviews findPlaceDetail(Long placeId, Long userId) {
+    public PlaceDetailWithReviews findPlaceDetail(Long placeId, Long userId, Long size) {
         // 리뷰를 최신 5개만 가져오기 위한 서브쿼리
         List<ReviewSimpleResponse> recentReviews = jpaQueryFactory
                 .select(Projections.constructor(ReviewSimpleResponse.class,
@@ -117,7 +117,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .where(review.place.id.eq(placeId))
                 .fetchOne();
 
-        boolean hasNext = totalReviewsCount != null && totalReviewsCount > 5; // 5개 이상의 리뷰가 있는지 확인
+        boolean hasNext = totalReviewsCount != null && totalReviewsCount > size; // 5개 이상의 리뷰가 있는지 확인
 
         // PlaceDetailResponse를 생성하기 위한 쿼리
         PlaceDetailResponse placeDetailResponse = jpaQueryFactory.select(

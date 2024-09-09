@@ -51,7 +51,7 @@ public class PlaceService {
     }
 
     // 특정 장소 상세 조회
-    public PlaceDetailWithReviews findPlaceDetail(Long userId, Long placeId) {
-        return placeRepository.findPlaceDetail(placeId, userId);
+    public PlaceDetailWithReviews findPlaceDetail(Long userId, Long placeId, Long size) {
+        return placeRepository.findPlaceDetail(placeId, userId, size);
     }
 }
