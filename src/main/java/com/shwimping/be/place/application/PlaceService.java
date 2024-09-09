@@ -3,6 +3,7 @@ package com.shwimping.be.place.application;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.MapPlaceResponse;
+import com.shwimping.be.place.dto.response.PlaceDetailWithReviews;
 import com.shwimping.be.place.dto.response.SearchPlaceResponse;
 import com.shwimping.be.place.dto.response.SearchPlaceResponseList;
 import com.shwimping.be.place.repository.PlaceRepository;
@@ -34,10 +35,10 @@ public class PlaceService {
     // 특정 조건 장소 검색
     public SearchPlaceResponseList findNearestPlaces(
             double longitude, double latitude, int maxDistant, List<Category> categoryList, SortType sortType,
-            String keyword, long page) {
+            String keyword, long page, long size) {
 
         List<SearchPlaceResponse> allSearchResult = placeRepository.findAllByLocationWithDistance(
-                longitude, latitude, maxDistant, categoryList, sortType, keyword, page);
+                longitude, latitude, maxDistant, categoryList, sortType, keyword, page, size);
 
         // 전체 데이터 수 카운트
         long totalCount = placeRepository.countByLocationWithDistance(longitude, latitude, maxDistant, categoryList);
@@ -47,5 +48,10 @@ public class PlaceService {
 
         return SearchPlaceResponseList.of(page, hasNext, longitude, latitude, maxDistant, keyword, sortType,
                 categoryList, allSearchResult);
+    }
+
+    // 특정 장소 상세 조회
+    public PlaceDetailWithReviews findPlaceDetail(Long userId, Long placeId) {
+        return placeRepository.findPlaceDetail(placeId, userId);
     }
 }

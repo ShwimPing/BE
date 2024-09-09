@@ -19,6 +19,6 @@ public class AISearchFacade {
         GetShelterRecommendAIResponse response = aiService.getResponse(message);
 
         return placeService.findNearestPlaces(longitude, latitude, response.distance(), response.category(),
-                response.sortType(), response.keyWord(), 0L);
+                response.sortType(), response.keyWord(), 0L, 10L);
     }
 }

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/place")
+@RequestMapping("/places")
 public class PlaceController {
 
     private final UserService userService;
@@ -63,10 +63,11 @@ public class PlaceController {
             @RequestParam List<Category> category,
             @RequestParam SortType sortType,
             @RequestParam(defaultValue = "") String keyword,
-            @RequestParam int page) {
+            @RequestParam int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         SearchPlaceResponseList nearestPlaces =
-                placeService.findNearestPlaces(longitude, latitude, maxDistance, category, sortType, keyword, page);
+                placeService.findNearestPlaces(longitude, latitude, maxDistance, category, sortType, keyword, page, size);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -77,7 +78,7 @@ public class PlaceController {
             "예시 데이터 경도: 127.0965824, 위도: 37.47153792 - 서울특별시 강남구 자곡로 116(도서관 쉼터), message는 사용자의 요청을 의미<br>" +
             "예시 요청: 이 근처 3km 안에 이름에 못골이 들어간 쉴 곳을 추천해줘. 평점순으로<br>" +
             "paging을 통해서 다음 페이지를 보려면 searchPlaces API에 요청")
-    @GetMapping("/ai")
+    @GetMapping("/ai-search")
     public ResponseEntity<ResponseTemplate<?>> getAIResponse(
             @RequestParam double longitude,
             @RequestParam double latitude,
@@ -88,5 +89,16 @@ public class PlaceController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResponseTemplate.from(shelterRecommendAI));
+    }
+
+    @Operation(summary = "장소 상세 조회", description = "장소 상세 정보와 리뷰를 조회")
+    @GetMapping("/detail")
+    public ResponseEntity<ResponseTemplate<?>> getPlaceDetail(
+            @AuthenticationPrincipal Long userId,
+            @RequestParam Long placeId) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.from(placeService.findPlaceDetail(userId, placeId)));
     }
 }
