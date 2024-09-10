@@ -38,7 +38,7 @@ public class ReviewController {
     public ResponseEntity<ResponseTemplate<?>> getReviewList(
             @PathVariable Long placeId,
             @RequestParam Long lastReviewId,
-            @RequestParam Long size) {
+            @RequestParam(defaultValue = "5") Long size) {
 
         ReviewSimpleResponseList reviewSimpleResponse =
                 reviewService.getReviewSimpleResponse(placeId, lastReviewId, size);
