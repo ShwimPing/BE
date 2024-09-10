@@ -8,7 +8,6 @@ import com.shwimping.be.review.repository.ReviewRepository;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.repository.UserRepository;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,21 +39,18 @@ public class ReviewInitializer implements ApplicationRunner {
             User user2 = userRepository.findById(2L).orElseThrow();
             User user3 = userRepository.findById(3L).orElseThrow();
 
-
             List<Review> reviewList = new ArrayList<>();
 
             Review DUMMY_REVIEW1 = Review.builder()
                     .place(place1)
                     .rating(BigDecimal.valueOf(4.0))
                     .content("좋아요")
-                    .date(LocalDate.now())
                     .user(user1)
                     .build();
             Review DUMMY_REVIEW2 = Review.builder()
                     .place(place1)
                     .rating(BigDecimal.valueOf(3.5))
                     .content("괜찮아요")
-                    .date(LocalDate.now())
                     .user(user2)
                     .build();
 
@@ -62,14 +58,12 @@ public class ReviewInitializer implements ApplicationRunner {
                     .place(place2)
                     .rating(BigDecimal.valueOf(4.0))
                     .content("좋아요")
-                    .date(LocalDate.now())
                     .user(user1)
                     .build();
             Review DUMMY_REVIEW4 = Review.builder()
                     .place(place2)
                     .rating(BigDecimal.valueOf(3.0))
                     .content("괜찮아요")
-                    .date(LocalDate.now())
                     .user(user2)
                     .build();
 
@@ -77,21 +71,36 @@ public class ReviewInitializer implements ApplicationRunner {
                     .place(place3)
                     .rating(BigDecimal.valueOf(3.5))
                     .content("좋아요")
-                    .date(LocalDate.now())
                     .user(user1)
                     .build();
             Review DUMMY_REVIEW6 = Review.builder()
                     .place(place3)
                     .rating(BigDecimal.valueOf(3.5))
                     .content("좋아요")
-                    .date(LocalDate.now())
                     .user(user2)
                     .build();
             Review DUMMY_REVIEW7 = Review.builder()
                     .place(place3)
                     .rating(BigDecimal.valueOf(3.5))
                     .content("좋아요")
-                    .date(LocalDate.now())
+                    .user(user3)
+                    .build();
+            Review DUMMY_REVIEW8 = Review.builder()
+                    .place(place3)
+                    .rating(BigDecimal.valueOf(3.5))
+                    .content("좋아요")
+                    .user(user3)
+                    .build();
+            Review DUMMY_REVIEW9 = Review.builder()
+                    .place(place3)
+                    .rating(BigDecimal.valueOf(3.5))
+                    .content("좋아요")
+                    .user(user3)
+                    .build();
+            Review DUMMY_REVIEW10 = Review.builder()
+                    .place(place3)
+                    .rating(BigDecimal.valueOf(3.5))
+                    .content("좋아요")
                     .user(user3)
                     .build();
 
@@ -102,6 +111,9 @@ public class ReviewInitializer implements ApplicationRunner {
             reviewList.add(DUMMY_REVIEW5);
             reviewList.add(DUMMY_REVIEW6);
             reviewList.add(DUMMY_REVIEW7);
+            reviewList.add(DUMMY_REVIEW8);
+            reviewList.add(DUMMY_REVIEW9);
+            reviewList.add(DUMMY_REVIEW10);
 
             reviewRepository.saveAll(reviewList);
         }

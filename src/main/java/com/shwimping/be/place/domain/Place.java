@@ -1,5 +1,6 @@
 package com.shwimping.be.place.domain;
 
+import com.shwimping.be.bookmark.domain.BookMark;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.review.domain.Review;
 import jakarta.persistence.CascadeType;
@@ -60,6 +61,9 @@ public class Place {
 
     @OneToMany(mappedBy = "place", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Review> reviewList;
+
+    @OneToMany(mappedBy = "place", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<BookMark> bookMarkList;
 
     @Builder
     public Place(String name, String region, Category category, String address, LocalTime openTime, LocalTime closeTime,
