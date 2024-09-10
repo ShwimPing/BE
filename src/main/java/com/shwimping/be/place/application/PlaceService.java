@@ -1,11 +1,14 @@
 package com.shwimping.be.place.application;
 
 import com.shwimping.be.place.application.type.SortType;
+import com.shwimping.be.place.domain.Place;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.MapPlaceResponse;
 import com.shwimping.be.place.dto.response.PlaceDetailWithReviews;
 import com.shwimping.be.place.dto.response.SearchPlaceResponse;
 import com.shwimping.be.place.dto.response.SearchPlaceResponseList;
+import com.shwimping.be.place.exception.PlaceNotFoundException;
+import com.shwimping.be.place.exception.errorcode.PlaceErrorCode;
 import com.shwimping.be.place.repository.PlaceRepository;
 import com.shwimping.be.place.repository.mongo.MongoPlaceRepository;
 import java.util.List;
@@ -53,5 +56,11 @@ public class PlaceService {
     // 특정 장소 상세 조회
     public PlaceDetailWithReviews findPlaceDetail(Long userId, Long placeId, Long size) {
         return placeRepository.findPlaceDetail(placeId, userId, size);
+    }
+
+    // 특정 장소 정보 조회
+    public Place getPlaceById(Long placeId) {
+        return placeRepository.findById(placeId)
+                .orElseThrow(() -> new PlaceNotFoundException(PlaceErrorCode.PLACE_NOT_FOUND));
     }
 }
