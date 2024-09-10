@@ -2,10 +2,11 @@ package com.shwimping.be.review.presentation;
 
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.review.application.ReviewService;
-import com.shwimping.be.review.dto.ReviewUploadRequest;
+import com.shwimping.be.review.dto.request.ReviewUploadRequest;
 import com.shwimping.be.review.dto.response.ReviewSimpleResponseList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class ReviewController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ResponseTemplate<?>> uploadReview(
             @AuthenticationPrincipal Long userId,
-            @RequestPart ReviewUploadRequest reviewUploadRequest,
+            @Valid @RequestPart ReviewUploadRequest reviewUploadRequest,
             @RequestPart(required = false) MultipartFile file) {
 
         reviewService.uploadReview(userId, reviewUploadRequest, file);

@@ -3,7 +3,7 @@ package com.shwimping.be.review.application;
 import com.shwimping.be.global.application.NCPStorageService;
 import com.shwimping.be.place.application.PlaceService;
 import com.shwimping.be.place.domain.Place;
-import com.shwimping.be.review.dto.ReviewUploadRequest;
+import com.shwimping.be.review.dto.request.ReviewUploadRequest;
 import com.shwimping.be.review.dto.response.ReviewSimpleResponse;
 import com.shwimping.be.review.dto.response.ReviewSimpleResponseList;
 import com.shwimping.be.review.repository.ReviewRepository;
@@ -39,7 +39,11 @@ public class ReviewService {
 
     @Transactional
     public void uploadReview(Long userId, ReviewUploadRequest reviewUploadRequest, MultipartFile file) {
-        String imageUrl = ncpStorageService.uploadFile(file, "reviews");
+
+        String imageUrl = "";
+        if (file != null) {
+            imageUrl = ncpStorageService.uploadFile(file, "reviews");
+        }
 
         User user = userService.getUserById(userId);
         Place place = placeService.getPlaceById(reviewUploadRequest.placeId());
