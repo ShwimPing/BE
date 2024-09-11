@@ -29,23 +29,23 @@ public class FcmServiceImpl implements FcmService {
 
     private final FcmApiClient fcmApiClient;
 
+    private static final String FCM_URL = ("https://www.googleapis.com/auth/firebase.messaging");
+
     @Override
-    public String sendMessage(FcmSendRequest request) throws JsonProcessingException, FirebaseMessagingException {
+    public void sendMessage(FcmSendRequest request) throws JsonProcessingException, FirebaseMessagingException {
         String message = makeMessage(request);
 
         try {
             fcmApiClient.sendMessage(projectName, "Bearer " + getAccessToken(), message);
         } catch (Exception e) {
-            log.error("[-] FCM 전송 오류 :: " + e.getMessage());
+            log.info("[-] FCM 전송 오류 :: " + e.getMessage());
         }
-
-        return message;
     }
 
     private String getAccessToken() throws IOException {
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
-                .createScoped(List.of("https://www.googleapis.com/auth/firebase.messaging"));
+                .createScoped(List.of(FCM_URL));
 
         googleCredentials.refreshIfExpired();
         log.info("[+] FCM Access Token :: " + googleCredentials.getAccessToken().getTokenValue());

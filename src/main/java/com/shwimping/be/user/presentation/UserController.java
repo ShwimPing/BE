@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
+
 @Tag(name = "Mypage", description = "마이페이지 관련 API")
 @Slf4j
 @RestController
@@ -33,10 +35,10 @@ public class UserController {
     public ResponseEntity<ResponseTemplate<Object>> sendFCM(
             @Valid @RequestBody FcmSendRequest request) throws JsonProcessingException, FirebaseMessagingException {
 
-        String response = fcmService.sendMessage(request);
+        fcmService.sendMessage(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseTemplate.from(response));
+                .body(EMPTY_RESPONSE);
     }
 }

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface FcmService {
-    String sendMessage(FcmSendRequest request) throws JsonProcessingException, FirebaseMessagingException;
+    void sendMessage(FcmSendRequest request) throws JsonProcessingException, FirebaseMessagingException;
 }
