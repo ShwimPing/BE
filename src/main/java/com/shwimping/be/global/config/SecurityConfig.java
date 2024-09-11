@@ -38,6 +38,7 @@ public class SecurityConfig {
                         "/swagger-resources/*",
                         "/webjars/**",
                         "/auth/**",
+                        "/mypage/fcm",
                         "/global/health-check");
     }
 
