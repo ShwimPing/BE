@@ -1,6 +1,7 @@
 package com.shwimping.be.user.domain;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
+import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.SaveProfileRequest;
 import jakarta.persistence.Column;
@@ -69,7 +70,7 @@ public class User {
         this.nowLocation = nowLocation;
     }
 
-    public static User from(OAuthInfoResponse oAuthInfoResponse) {
+    public static User of(OAuthInfoResponse oAuthInfoResponse, NCPProperties ncpProperties) {
         return User.builder()
                 .fcmToken("temporal")
                 .email(oAuthInfoResponse.getEmail())
@@ -77,7 +78,7 @@ public class User {
                 .nickname(oAuthInfoResponse.getNickname())
                 .socialId(oAuthInfoResponse.getId())
                 .isAlarmAllowed(true)
-                .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                .profileImageUrl(ncpProperties.s3().endpoint() + ncpProperties.s3().bucket() + "/profile/ic_profile.svg")
                 .nowLocation("temporal")
                 .build();
     }

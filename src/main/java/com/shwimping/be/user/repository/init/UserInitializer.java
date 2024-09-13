@@ -2,17 +2,19 @@ package com.shwimping.be.user.repository.init;
 
 
 import com.shwimping.be.global.util.DummyDataInit;
+import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.repository.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +24,9 @@ public class UserInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NCPProperties ncpProperties;
+
+    private static final String DUMMY_PROFILE_IMAGE_URL = "/profile/ic_profile.svg";
 
     @Override
     public void run(ApplicationArguments args) {
@@ -34,7 +39,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("관리자")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                    .profileImageUrl(ncpProperties.s3().endpoint() + ncpProperties.s3().bucket() + DUMMY_PROFILE_IMAGE_URL)
                     .email("admin@naver.com")
                     .password(passwordEncoder.encode("adminPassword"))
                     .provider(Provider.SELF)
@@ -45,7 +50,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("user1")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                    .profileImageUrl(ncpProperties.s3().endpoint() + ncpProperties.s3().bucket() + DUMMY_PROFILE_IMAGE_URL)
                     .email("user1@naver.com")
                     .password(passwordEncoder.encode("user1Password"))
                     .provider(Provider.SELF)
@@ -56,7 +61,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("user2")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                    .profileImageUrl(ncpProperties.s3().endpoint() + ncpProperties.s3().bucket() + DUMMY_PROFILE_IMAGE_URL)
                     .email("user2@naver.com")
                     .password(passwordEncoder.encode("user2Password"))
                     .provider(Provider.SELF)

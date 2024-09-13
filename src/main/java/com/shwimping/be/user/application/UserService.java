@@ -1,6 +1,7 @@
 package com.shwimping.be.user.application;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
+import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
@@ -25,11 +26,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NCPProperties ncpProperties;
 
     @Transactional
     public void createUser(CreateUserRequest request) {
         if (!userRepository.existsByEmailAndProvider(request.email(), Provider.SELF)) {
-            User user = request.toUser(passwordEncoder);
+            User user = request.toUser(passwordEncoder, ncpProperties);
             userRepository.save(user);
         } else {
             throw new InvalidEmailException(INVALID_EMAIL);
@@ -49,7 +51,7 @@ public class UserService {
     }
 
     private User getUser(OAuthInfoResponse oAuthInfoResponse) {
-        User user = User.from(oAuthInfoResponse);
+        User user = User.of(oAuthInfoResponse, ncpProperties);
         userRepository.save(user);
         return user;
     }
