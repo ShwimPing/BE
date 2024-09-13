@@ -1,7 +1,5 @@
 package com.shwimping.be.user.presentation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.user.application.FcmService;
 import com.shwimping.be.user.application.UserService;
@@ -33,7 +31,7 @@ public class UserController {
     @Operation(summary = "FCM 보내기", description = "FCM 보내기 테스트")
     @PostMapping("/fcm")
     public ResponseEntity<ResponseTemplate<Object>> sendFCM(
-            @Valid @RequestBody FcmSendRequest request) throws JsonProcessingException, FirebaseMessagingException {
+            @Valid @RequestBody FcmSendRequest request) {
 
         fcmService.sendMessage(request);
 

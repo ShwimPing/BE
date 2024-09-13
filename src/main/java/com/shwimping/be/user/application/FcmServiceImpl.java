@@ -3,7 +3,6 @@ package com.shwimping.be.user.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.shwimping.be.user.dto.request.FcmMessageRequest;
 import com.shwimping.be.user.dto.request.FcmSendRequest;
 import com.shwimping.be.user.util.FcmApiClient;
@@ -29,16 +28,17 @@ public class FcmServiceImpl implements FcmService {
 
     private final FcmApiClient fcmApiClient;
 
-    private static final String FCM_URL = ("https://www.googleapis.com/auth/firebase.messaging");
+    private static final String FCM_URL = "https://www.googleapis.com/auth/firebase.messaging";
 
     @Override
-    public void sendMessage(FcmSendRequest request) throws JsonProcessingException, FirebaseMessagingException {
-        String message = makeMessage(request);
+    public void sendMessage(FcmSendRequest request){
+        String message;
 
         try {
+            message = makeMessage(request);
             fcmApiClient.sendMessage(projectName, "Bearer " + getAccessToken(), message);
-        } catch (Exception e) {
-            log.info("[-] FCM 전송 오류 :: " + e.getMessage());
+        } catch (IOException e) {
+            log.info("[-] FCM 전송 오류 :: {}", e.getMessage());
         }
     }
 
