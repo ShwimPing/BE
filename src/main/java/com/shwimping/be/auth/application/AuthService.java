@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.shwimping.be.auth.application.exception.errorcode.AuthErrorCode.INVALID_REFRESH_TOKEN;
 import static com.shwimping.be.auth.application.jwt.type.JwtValidationType.VALID_JWT;
@@ -47,8 +48,8 @@ public class AuthService {
         return userService.validateNickname(nickname);
     }
 
-    public void saveProfile(Long userId, SaveProfileRequest request) {
-        userService.saveProfile(userId, request);
+    public void saveProfile(Long userId, SaveProfileRequest request, MultipartFile file) {
+        userService.saveProfile(userId, request, file);
     }
 
     public LoginResponse selfLogin(LoginRequest request, HttpServletResponse response) {

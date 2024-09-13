@@ -87,9 +87,12 @@ public class User {
         this.nowLocation = location;
     }
 
-    public void updateProfile(SaveProfileRequest request) {
+    public void updateProfile(SaveProfileRequest request, String profileImageUrl) {
         this.fcmToken = request.fcmToken();
         this.nickname = request.nickname();
-        this.profileImageUrl = request.profileImageUrl();
+
+        if (!profileImageUrl.isEmpty()) {
+            this.profileImageUrl = profileImageUrl;
+        }
     }
 }

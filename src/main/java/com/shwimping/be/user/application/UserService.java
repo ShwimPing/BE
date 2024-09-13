@@ -1,6 +1,7 @@
 package com.shwimping.be.user.application;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
+import com.shwimping.be.global.application.NCPStorageService;
 import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_EMAIL;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.USER_NOT_FOUND;
@@ -27,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final NCPProperties ncpProperties;
+    private final NCPStorageService ncpStorageService;
 
     @Transactional
     public void createUser(CreateUserRequest request) {
@@ -45,9 +48,16 @@ public class UserService {
     }
 
     @Transactional
-    public void saveProfile(Long userId, SaveProfileRequest request) {
+    public void saveProfile(Long userId, SaveProfileRequest request, MultipartFile file) {
         User user = getUserById(userId);
-        user.updateProfile(request);
+
+        String profileImageUrl = "";
+
+        if (file != null) {
+            profileImageUrl = ncpStorageService.uploadFile(file, "profile");
+        }
+
+        user.updateProfile(request, profileImageUrl);
     }
 
     private User getUser(OAuthInfoResponse oAuthInfoResponse) {
