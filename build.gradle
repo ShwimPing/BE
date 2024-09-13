@@ -14,6 +14,9 @@ java {
 }
 
 configurations {
+	configureEach {
+		exclude group: 'commons-logging', module: 'commons-logging'
+	}
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -78,9 +81,14 @@ dependencies {
 	//테스트 코드 작성시 사용할 DB(H2)
 	runtimeOnly 'com.h2database:h2'
 
+	//jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+	//prometheus, actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
