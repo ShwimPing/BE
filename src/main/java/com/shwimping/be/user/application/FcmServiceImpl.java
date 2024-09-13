@@ -31,6 +31,15 @@ public class FcmServiceImpl implements FcmService {
     private static final String FCM_URL = "https://www.googleapis.com/auth/firebase.messaging";
 
     @Override
+    public void getUserTokens(List<String> tokens, String wrn, String lvl) {
+        for (String token : tokens) {
+            FcmSendRequest request = FcmSendRequest.of(token, wrn, lvl);
+
+            sendMessage(request);
+        }
+    }
+
+    @Override
     public void sendMessage(FcmSendRequest request){
         String message;
 

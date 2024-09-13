@@ -19,9 +19,9 @@ public record WeatherResponse(
     public static WeatherResponse of(Matcher matcher) {
         return WeatherResponse.builder()
                 .regUp(matcher.group(1))
-                .regUpKo(matcher.group(2))
+                .regUpKo(matcher.group(2).trim())
                 .regId(matcher.group(3))
-                .regKo(matcher.group(4))
+                .regKo(matcher.group(4).trim())
                 .tmFc(matcher.group(5))
                 .tmEf(matcher.group(6))
                 .wrn(matcher.group(7))

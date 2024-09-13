@@ -24,13 +24,15 @@ public class WeatherService {
     String key;
 
     private final KmaApiClient kmaApiClient;
+    private final UserService userService;
+    private final FcmService fcmService;
 
     public List<WeatherResponse> getWeatherWarning() {
         // Open API로 요청을 보내기 위해 필요한 파라미터 설정
         String fe = "f";
 
         // 현재 날짜 가져오기
-        LocalDateTime now = LocalDateTime.now().minusDays(2);
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
         // 시간을 오후 23시 59분으로 설정하기
         LocalDateTime dateTimeWithSpecificTime = now.withHour(23).withMinute(59).withSecond(0).withNano(0);
         // 원하는 형식으로 포맷팅
@@ -69,9 +71,12 @@ public class WeatherService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(dataSection);
 
+        String wrn = "";
+        String lvl = "";
+
         // '서울특별시'에 '오늘' 특보가 났는지 확인하기 위한 값
         String targetRegUp = "L1100000";
-        String now = LocalDate.now().minusDays(3).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         log.info("[+] WeatherService now = {}", now);
 
         while (matcher.find()) {
@@ -79,9 +84,14 @@ public class WeatherService {
 
             // regUp 값이 원하는 값과 일치하는 경우만 추가
             if (matcher.group(1).equals(targetRegUp) && tmFc.equals(now)) {
+                wrn = matcher.group(7); // wrn 값
+                lvl = matcher.group(8); // lvl 값
                 weatherResponses.add(WeatherResponse.of(matcher));
             }
         }
+
+        List<String> userList = userService.getUsersByLocation(weatherResponses);
+        fcmService.getUserTokens(userList, wrn, lvl);
 
         return weatherResponses;
     }
