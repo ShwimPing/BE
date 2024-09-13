@@ -37,7 +37,7 @@ public class AIService {
                 "1. distance (m 단위로) \n" +
                 "2. category (SMART, LIBRARY, TOGETHER) - 여러 개 가능 \n" +
                 "3. sortType (STAR_DESC 또는 DISTANCE_ASC) \n" +
-                "4. kwyWord (검색어) \n\n" +
+                "4. keyWord (검색어) \n\n" +
                 "예시: \n" +
                 "distance: 3000 (사용자가 '3km 안에'라고 했을 때) \n" +
                 "category: SMART, TOGETHER, LIBRARY (항상 추가)" +

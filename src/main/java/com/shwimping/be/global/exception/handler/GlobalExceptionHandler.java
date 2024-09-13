@@ -8,6 +8,7 @@ import com.shwimping.be.global.exception.errorcode.GlobalErrorCode;
 import com.shwimping.be.global.exception.response.ErrorResponse;
 import com.shwimping.be.global.exception.response.ErrorResponse.ValidationError;
 import com.shwimping.be.global.exception.response.ErrorResponse.ValidationErrors;
+import com.shwimping.be.place.exception.PlaceNotFoundException;
 import java.util.List;
 
 import com.shwimping.be.user.exception.InvalidEmailException;
@@ -28,6 +29,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(PlaceNotFoundException.class)
+    public ResponseEntity<Object> handlePlaceNotFound(PlaceNotFoundException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
 
     @ExceptionHandler(FileConvertFailException.class)
     public ResponseEntity<Object> handleFileConvertFail(FileConvertFailException e) {

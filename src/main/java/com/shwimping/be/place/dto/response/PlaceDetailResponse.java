@@ -5,18 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.shwimping.be.place.domain.type.Category;
 import java.time.LocalTime;
 
-public record SearchPlaceResponse(
+public record PlaceDetailResponse(
         Long placeId,
         String name,
         String address,
-        Long distance,
-        Category category,
         @JsonFormat(pattern = "HH:mm")
         LocalTime openTime,
         @JsonFormat(pattern = "HH:mm")
         LocalTime closeTime,
+        Category category,
+        String restInfo,
         Double rating,
-        Long reviewCount
+        Boolean isBookmarked
 ) {
     @JsonProperty("rating")
     public Double getFormattedRating() {
