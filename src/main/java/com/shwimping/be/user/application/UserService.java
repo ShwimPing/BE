@@ -117,12 +117,12 @@ public class UserService {
             // 현재 응답의 regId에 해당하는 권역을 찾기
             String responseRegId = response.regId(); // regId 값에서 공백 제거
 
-            // 각 유저에 대해 NowLocation이 해당 권역에 속하는지 확인
+            // 각 유저에 대해 NowLocation이 해당 권역에 속하는지 확인 및 알람 허용 여부 확인
             for (User user : allUsers) {
                 // 유저의 현재 위치와 권역의 구 리스트를 비교
                 List<String> regionList = Region.getRegionListByRegId(responseRegId);
 
-                if (regionList.contains(user.getNowLocation())) {
+                if (regionList.contains(user.getNowLocation()) && Boolean.TRUE.equals(user.getIsAlarmAllowed())) {
                     userList.add(user.getFcmToken());
                 }
             }

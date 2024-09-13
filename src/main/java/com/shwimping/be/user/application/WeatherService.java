@@ -24,25 +24,27 @@ public class WeatherService {
     String key;
 
     private final KmaApiClient kmaApiClient;
-    private final UserService userService;
     private final FcmService fcmService;
+    private final UserService userService;
 
     public List<WeatherResponse> getWeatherWarning() {
-        // Open API로 요청을 보내기 위해 필요한 파라미터 설정
         String fe = "f";
+        String tm = getTm();
+        String help = "1";
 
+        // Feign 클라이언트를 사용하여 API 요청 보내기
+        String response = kmaApiClient.getWeatherWarning(fe, tm, help, key);
+
+        return extractWeatherData(response);
+    }
+
+    private static String getTm() {
         // 현재 날짜 가져오기
         LocalDateTime now = LocalDateTime.now().plusDays(1);
         // 시간을 오후 23시 59분으로 설정하기
         LocalDateTime dateTimeWithSpecificTime = now.withHour(23).withMinute(59).withSecond(0).withNano(0);
         // 원하는 형식으로 포맷팅
-        String tm = dateTimeWithSpecificTime.format(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm"));
-
-        String help = "1";
-
-        // Feign 클라이언트를 사용하여 API 요청 보내기
-        String response = kmaApiClient.getWeatherWarning(fe, tm, help, key);
-        return extractWeatherData(response);
+        return dateTimeWithSpecificTime.format(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm"));
     }
 
     private List<WeatherResponse> extractWeatherData(String response) {
@@ -77,21 +79,24 @@ public class WeatherService {
         // '서울특별시'에 '오늘' 특보가 났는지 확인하기 위한 값
         String targetRegUp = "L1100000";
         String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        log.info("[+] WeatherService now = {}", now);
 
         while (matcher.find()) {
-            String tmFc = matcher.group(5).substring(0, 8); // tmFc 값
+            // 발표시각과 현재 시각이 같은 경우에만 데이터를 저장
+            String tmFc = matcher.group(5).substring(0, 8);
 
-            // regUp 값이 원하는 값과 일치하는 경우만 추가
             if (matcher.group(1).equals(targetRegUp) && tmFc.equals(now)) {
-                wrn = matcher.group(7); // wrn 값
-                lvl = matcher.group(8); // lvl 값
+                wrn = matcher.group(7);
+                lvl = matcher.group(8);
                 weatherResponses.add(WeatherResponse.of(matcher));
             }
         }
 
         List<String> userList = userService.getUsersByLocation(weatherResponses);
-        fcmService.getUserTokens(userList, wrn, lvl);
+
+        // 사용자가 존재하는 경우에만 푸시 알림 전송
+        if (!userList.isEmpty()) {
+            fcmService.getUserTokens(userList, wrn, lvl);
+        }
 
         return weatherResponses;
     }

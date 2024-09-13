@@ -34,7 +34,6 @@ public class FcmServiceImpl implements FcmService {
     public void getUserTokens(List<String> tokens, String wrn, String lvl) {
         for (String token : tokens) {
             FcmSendRequest request = FcmSendRequest.of(token, wrn, lvl);
-
             sendMessage(request);
         }
     }
