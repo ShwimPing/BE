@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
 
-@Tag(name = "Feign", description = "외부 서버와의 통신 관련 API")
+@Tag(name = "Feign", description = "외부 서버와의 통신 관련 테스트 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
