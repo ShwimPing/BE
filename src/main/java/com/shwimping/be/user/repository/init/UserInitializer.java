@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -19,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Order(1)
 @DummyDataInit
 public class UserInitializer implements ApplicationRunner {
+
+    @Value("${cloud.aws.cdn.domain}")
+    private String defaultProfileImageUrl;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -34,7 +38,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("관리자")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                    .profileImageUrl(defaultProfileImageUrl + "/profile/ic_profile.svg")
                     .email("admin@naver.com")
                     .password(passwordEncoder.encode("adminPassword"))
                     .provider(Provider.SELF)
@@ -45,7 +49,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("user1")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                    .profileImageUrl(defaultProfileImageUrl + "/profile/ic_profile.svg")
                     .email("user1@naver.com")
                     .password(passwordEncoder.encode("user1Password"))
                     .provider(Provider.SELF)
@@ -56,7 +60,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("user2")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                    .profileImageUrl(defaultProfileImageUrl + "/profile/ic_profile.svg")
                     .email("user2@naver.com")
                     .password(passwordEncoder.encode("user2Password"))
                     .provider(Provider.SELF)

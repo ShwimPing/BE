@@ -9,6 +9,8 @@ import com.shwimping.be.global.exception.response.ErrorResponse;
 import com.shwimping.be.global.exception.response.ErrorResponse.ValidationError;
 import com.shwimping.be.global.exception.response.ErrorResponse.ValidationErrors;
 import com.shwimping.be.place.exception.PlaceNotFoundException;
+import com.shwimping.be.review.exception.CanNotDeleteReviewException;
+import com.shwimping.be.review.exception.ReviewNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -39,6 +41,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PlaceNotFoundException.class)
     public ResponseEntity<Object> handlePlaceNotFound(PlaceNotFoundException e, HttpServletRequest request) {
+        logInfo(e.getErrorCode(), e, request);
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(CanNotDeleteReviewException.class)
+    public ResponseEntity<Object> handleCanNotDeleteReview(CanNotDeleteReviewException e, HttpServletRequest request) {
+        logInfo(e.getErrorCode(), e, request);
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<Object> handleReviewNotFound(ReviewNotFoundException e, HttpServletRequest request) {
         logInfo(e.getErrorCode(), e, request);
         return handleExceptionInternal(e.getErrorCode());
     }
