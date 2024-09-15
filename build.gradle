@@ -14,6 +14,9 @@ java {
 }
 
 configurations {
+	configureEach {
+		exclude group: 'commons-logging', module: 'commons-logging'
+	}
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -41,7 +44,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-batch'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -79,13 +81,17 @@ dependencies {
 	//테스트 코드 작성시 사용할 DB(H2)
 	runtimeOnly 'com.h2database:h2'
 
-	//JWT
+	//jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+	//prometheus, actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	// Firebase
-	implementation 'com.google.firebase:firebase-admin:9.1.1'
+	implementation 'com.google.firebase:firebase-admin'
 }
 
 tasks.named('test') {
