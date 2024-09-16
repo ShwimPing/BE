@@ -24,7 +24,9 @@ jobs:
       # 설정 파일 생성
       - name: application yml setting
         run: |
+          mkdir ./src/main/resources/firebase/
           echo ${{ env.APPLICATION_PROD }} | base64 --decode > ./src/main/resources/application-prod.yml
+          echo ${{ env.FCM_FILE }} | base64 --decode > ./src/main/resources/firebase/shwimping-firebase-adminsdk-ta5gm-b57497142b.json
 
       # Gradle 실행권한 부여
       - name: Grant execute permission to gradlew
