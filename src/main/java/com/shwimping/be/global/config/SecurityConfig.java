@@ -51,9 +51,6 @@ public class SecurityConfig {
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))   // JWT 사용해서 세션 사용 X
                 .authorizeHttpRequests(auth -> auth // 요청에 대한 인증 설정
-                        .requestMatchers("/places/**").permitAll()
-                        .requestMatchers("/reviews/*").permitAll()
-                        .requestMatchers("/feign/**").permitAll()
                         .requestMatchers(WHITE_LIST).permitAll()
                         .anyRequest().authenticated())  //이외의 요청은 전부 인증 필요
                 .exceptionHandling(exceptionHandling -> {
