@@ -71,7 +71,7 @@ public class WeatherService {
     }
 
     private String extractDataSection(String response) {
-        String headerEndMarker = "#\\s*REG_UP.*?ED_TM";
+        String headerEndMarker = "# REG_UP  REG_UP_KO-------------------------------  REG_ID    REG_KO----------------------------------  TM_FC         TM_EF         WRN   LVL   CMD   ED_TM";
         int startIndex = response.indexOf(headerEndMarker);
 
         if (startIndex == -1) {
