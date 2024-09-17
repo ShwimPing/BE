@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.shwimping.be.global.dto.ResponseTemplate.EMPTY_RESPONSE;
 
@@ -84,12 +86,13 @@ public class AuthController {
     }
 
     @Operation(summary = "프로필 등록", description = "회원가입 후 닉네임, 프로필 사진, 토큰을 등록합니다")
-    @PostMapping("/profile")
+    @PostMapping(value = "/profile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ResponseTemplate<Object>> saveProfile(
             @AuthenticationPrincipal Long userId,
-            @Valid @RequestBody SaveProfileRequest request) {
+            @Valid @RequestPart SaveProfileRequest request,
+            @RequestPart(required = false) MultipartFile file) {
 
-        authService.saveProfile(userId, request);
+        authService.saveProfile(userId, request, file);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

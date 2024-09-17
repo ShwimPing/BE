@@ -1,10 +1,14 @@
 package com.shwimping.be.user.application;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
+import com.shwimping.be.global.application.NCPStorageService;
+import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
+import com.shwimping.be.user.domain.type.Region;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.dto.request.SaveProfileRequest;
+import com.shwimping.be.user.dto.response.WeatherResponse;
 import com.shwimping.be.user.exception.InvalidEmailException;
 import com.shwimping.be.user.exception.UserNotFoundException;
 import com.shwimping.be.user.repository.UserRepository;
@@ -13,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.INVALID_EMAIL;
 import static com.shwimping.be.user.exception.errorcode.UserErrorCode.USER_NOT_FOUND;
@@ -25,11 +33,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NCPProperties ncpProperties;
+    private final NCPStorageService ncpStorageService;
 
     @Transactional
     public void createUser(CreateUserRequest request) {
         if (!userRepository.existsByEmailAndProvider(request.email(), Provider.SELF)) {
-            User user = request.toUser(passwordEncoder);
+            User user = request.toUser(passwordEncoder, ncpProperties);
             userRepository.save(user);
         } else {
             throw new InvalidEmailException(INVALID_EMAIL);
@@ -43,13 +53,20 @@ public class UserService {
     }
 
     @Transactional
-    public void saveProfile(Long userId, SaveProfileRequest request) {
+    public void saveProfile(Long userId, SaveProfileRequest request, MultipartFile file) {
         User user = getUserById(userId);
-        user.updateProfile(request);
+
+        String profileImageUrl = "";
+
+        if (file != null) {
+            profileImageUrl = ncpStorageService.uploadFile(file, "profile");
+        }
+
+        user.updateProfile(request, profileImageUrl);
     }
 
     private User getUser(OAuthInfoResponse oAuthInfoResponse) {
-        User user = User.from(oAuthInfoResponse);
+        User user = User.of(oAuthInfoResponse, ncpProperties);
         userRepository.save(user);
         return user;
     }
@@ -88,5 +105,29 @@ public class UserService {
 
     public boolean validateNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
+    }
+
+    public List<String> getUsersByLocation(List<WeatherResponse> responses) {
+        List<String> userList = new ArrayList<>();
+
+        // 모든 유저를 한 번만 조회
+        List<User> allUsers = userRepository.findAll();
+
+        for (WeatherResponse response : responses) {
+            // 현재 응답의 regId에 해당하는 권역을 찾기
+            String responseRegId = response.regId(); // regId 값에서 공백 제거
+
+            // 각 유저에 대해 NowLocation이 해당 권역에 속하는지 확인 및 알람 허용 여부 확인
+            for (User user : allUsers) {
+                // 유저의 현재 위치와 권역의 구 리스트를 비교
+                List<String> regionList = Region.getRegionListByRegId(responseRegId);
+
+                if (regionList.contains(user.getNowLocation()) && Boolean.TRUE.equals(user.getIsAlarmAllowed())) {
+                    userList.add(user.getFcmToken());
+                }
+            }
+        }
+
+        return userList;
     }
 }

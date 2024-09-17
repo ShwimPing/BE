@@ -37,4 +37,5 @@ out/
 .vscode/
 
 src/main/resources/*.yml
+src/main/resources/firebase
 src/main/generated
