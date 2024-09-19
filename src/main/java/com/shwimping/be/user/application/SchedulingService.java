@@ -10,8 +10,8 @@ public class SchedulingService {
 
     private final WeatherService weatherService;
 
-    // 매일 오후 4시 5분에 실행
-    @Scheduled(cron = "0 5 16 * * ?")
+    // 매 시간의 3분에 api 요청
+    @Scheduled(cron = "0 3 * * * ?")
     public void sendWeatherWarning() {
         weatherService.getWeatherWarning();
     }

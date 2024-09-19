@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,13 +93,19 @@ public class WeatherService {
 
         // '서울특별시'에 '오늘' 특보가 났는지 확인하기 위한 값
         String targetRegUp = "L1100000";
-        String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String nowDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        LocalTime nowTime = LocalTime.now();
+        LocalTime lastTime = nowTime.minusHours(1);
 
         while (matcher.find()) {
             // 발표시각과 현재 시각이 같은 경우에만 데이터를 저장
-            String tmFc = matcher.group(5).substring(0, 8);
+            String tmFcDate = matcher.group(5).substring(0, 8);
 
-            if (matcher.group(1).equals(targetRegUp) && tmFc.equals(now)) {
+            String tmFcTimeString = matcher.group(5).substring(8);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HHmm");
+            LocalTime tmFcTime = LocalTime.parse(tmFcTimeString, formatter);
+
+            if (matcher.group(1).equals(targetRegUp) && tmFcDate.equals(nowDate) && (lastTime.isBefore(tmFcTime) && nowTime.isAfter(tmFcTime))) {
                 weatherResponses.add(WeatherResponse.of(matcher));
             }
         }
