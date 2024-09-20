@@ -5,13 +5,15 @@ import lombok.Builder;
 
 @Builder
 public record CardNewsResponse(
+        Long cardNewsId,
         String title,
-        String contentImageUrl
+        String cardImageUrl
 ) {
     public static CardNewsResponse from(CardNews cardNews) {
         return CardNewsResponse.builder()
+                .cardNewsId(cardNews.getId())
                 .title(cardNews.getTitle())
-                .contentImageUrl(cardNews.getCards().get(0).getCardImageUrl())
+                .cardImageUrl(cardNews.getCards().get(0).getCardImageUrl())
                 .build();
     }
 }
