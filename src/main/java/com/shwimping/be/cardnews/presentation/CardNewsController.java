@@ -2,6 +2,7 @@ package com.shwimping.be.cardnews.presentation;
 
 import com.shwimping.be.cardnews.application.CardNewsService;
 import com.shwimping.be.cardnews.domain.type.CardNewsCategory;
+import com.shwimping.be.cardnews.dto.response.CardNewsDetailResponse;
 import com.shwimping.be.cardnews.dto.response.CardNewsResponseList;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "CardNews", description = "카드뉴스 관련 API")
 @Slf4j
@@ -31,10 +29,24 @@ public class CardNewsController {
             @RequestParam(defaultValue = "HOT") CardNewsCategory cardNewsCategory
             ) {
 
-        CardNewsResponseList cardNewsList = cardNewsService.getCardNewsList(cardNewsCategory);
+        CardNewsResponseList response = cardNewsService.getCardNewsList(cardNewsCategory);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseTemplate.from(cardNewsList));
+                .body(ResponseTemplate.from(response));
+    }
+
+    // 카드뉴스 상세 조회
+    @Operation(summary = "카드뉴스 상세 조회", description = "카드뉴스 상세 조회")
+    @GetMapping("/{cardNewsId}")
+    public ResponseEntity<ResponseTemplate<?>> getCardNewsDetail(
+            @PathVariable Long cardNewsId
+    ) {
+
+        CardNewsDetailResponse response = cardNewsService.getCardNewsDetail(cardNewsId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.from(response));
     }
 }

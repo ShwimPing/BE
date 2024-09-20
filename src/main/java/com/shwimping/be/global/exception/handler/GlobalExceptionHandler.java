@@ -2,6 +2,7 @@ package com.shwimping.be.global.exception.handler;
 
 import com.shwimping.be.auth.application.exception.InvalidProviderException;
 import com.shwimping.be.auth.application.exception.InvalidTokenException;
+import com.shwimping.be.cardnews.exception.CardNewsNotFoundException;
 import com.shwimping.be.global.exception.FileConvertFailException;
 import com.shwimping.be.global.exception.errorcode.ErrorCode;
 import com.shwimping.be.global.exception.errorcode.GlobalErrorCode;
@@ -89,6 +90,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidProviderException.class)
     public ResponseEntity<Object> handleInvalidProvider(final InvalidProviderException e) {
+        return handleExceptionInternal(e.getErrorCode());
+    }
+
+    @ExceptionHandler(CardNewsNotFoundException.class)
+    public ResponseEntity<Object> handleCardNewsNotFound(final CardNewsNotFoundException e) {
         return handleExceptionInternal(e.getErrorCode());
     }
 
