@@ -27,6 +27,8 @@ public class UserInitializer implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private static final String DUMMY_PROFILE_IMAGE_URL = "/profile/ic_profile.svg";
+
     @Override
     public void run(ApplicationArguments args) {
         if (userRepository.count() > 0) {
@@ -38,7 +40,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("관리자")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl(defaultProfileImageUrl + "/profile/ic_profile.svg")
+                    .profileImageUrl(defaultProfileImageUrl + DUMMY_PROFILE_IMAGE_URL)
                     .email("admin@naver.com")
                     .password(passwordEncoder.encode("adminPassword"))
                     .provider(Provider.SELF)
@@ -49,7 +51,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("user1")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl(defaultProfileImageUrl + "/profile/ic_profile.svg")
+                    .profileImageUrl(defaultProfileImageUrl + DUMMY_PROFILE_IMAGE_URL)
                     .email("user1@naver.com")
                     .password(passwordEncoder.encode("user1Password"))
                     .provider(Provider.SELF)
@@ -60,7 +62,7 @@ public class UserInitializer implements ApplicationRunner {
                     .nickname("user2")
                     .fcmToken("fcmToken")
                     .isAlarmAllowed(true)
-                    .profileImageUrl(defaultProfileImageUrl + "/profile/ic_profile.svg")
+                    .profileImageUrl(defaultProfileImageUrl + DUMMY_PROFILE_IMAGE_URL)
                     .email("user2@naver.com")
                     .password(passwordEncoder.encode("user2Password"))
                     .provider(Provider.SELF)

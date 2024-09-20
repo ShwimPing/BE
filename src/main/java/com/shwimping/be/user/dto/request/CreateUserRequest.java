@@ -1,5 +1,6 @@
 package com.shwimping.be.user.dto.request;
 
+import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +16,7 @@ public record CreateUserRequest(
     @NotBlank(message = "비밀번호를 입력해주세요")
     String password
 ) {
-    public User toUser(PasswordEncoder passwordEncoder) {
+    public User toUser(PasswordEncoder passwordEncoder, NCPProperties ncpProperties) {
         String temporal = "temporal";
 
         return User.builder()
@@ -25,7 +26,7 @@ public record CreateUserRequest(
                 .provider(SELF)
                 .nickname(temporal)
                 .isAlarmAllowed(true)
-                .profileImageUrl("https://kr.object.ncloudstorage.com/shwimping/profile/ic_profile.svg")
+                .profileImageUrl(ncpProperties.s3().endpoint() + ncpProperties.s3().bucket() + "/profile/ic_profile.svg")
                 .nowLocation(temporal)
                 .build();
     }

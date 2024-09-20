@@ -62,6 +62,17 @@ cloud:
       bucket: bucketname
     region:
       static-value: kr-standard
+    cdn:
+      domain: cdndomain
+fcm:
+  project:
+    name: fcm-project-name
+  config:
+    path: fcm-config-path
+
+kma:
+  weather:
+    key: thisisweatherapikey
 
 server:
   env: test
