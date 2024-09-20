@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Category {
+public enum CardNewsCategory {
     HOT("폭염"),
     COLD("한파"),
     ;

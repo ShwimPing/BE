@@ -1,6 +1,6 @@
 package com.shwimping.be.cardnews.domain;
 
-import com.shwimping.be.cardnews.domain.type.Category;
+import com.shwimping.be.cardnews.domain.type.CardNewsCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,16 +28,16 @@ public class CardNews {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
-    private Category category;
+    private CardNewsCategory cardNewsCategory;
 
     @OneToMany(mappedBy = "cardNews", fetch = FetchType.LAZY)
     private List<Card> cards;
 
     @Builder
-    public CardNews(String title, String content, Category category, List<Card> cards) {
+    public CardNews(String title, String content, CardNewsCategory cardNewsCategory, List<Card> cards) {
         this.title = title;
         this.content = content;
-        this.category = category;
+        this.cardNewsCategory = cardNewsCategory;
         this.cards = cards;
     }
 }
