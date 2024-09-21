@@ -26,6 +26,9 @@ public class NCPStorageService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Value("${cloud.aws.cdn.domain}")
+    private String cdnDomain;
+
     public String uploadFile(MultipartFile multipartFile, String path) {
         // UUID를 사용하여 파일 이름 생성
         String fileName = UUID.randomUUID() + "_" + Objects.requireNonNull(multipartFile.getOriginalFilename());
@@ -40,7 +43,7 @@ public class NCPStorageService {
             amazonS3.putObject(new PutObjectRequest(bucket, fileLocation, multipartFile.getInputStream(), metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
-            return amazonS3.getUrl(bucket, fileLocation).toString();
+            return cdnDomain + "/" + fileLocation;
         } catch (IOException e) {
             throw new FileConvertFailException(GlobalErrorCode.FILE_CONVERT_FAIL);
         }
@@ -48,12 +51,14 @@ public class NCPStorageService {
 
     public void deleteFile(String fileUrl) {
         // URL에서 파일 이름 추출
-        String fileName = fileUrl.substring(fileUrl.indexOf(bucket) + bucket.length() + 1);
+        String fileName = fileUrl.substring(cdnDomain.length() + 1);
+
+        log.info("fileName: {}", fileName);
+
         try {
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
         } catch (Exception e) {
             log.error("파일 삭제 실패: {}", e.getMessage());
-            // 필요 시 적절한 예외 처리 추가
         }
     }
 }
