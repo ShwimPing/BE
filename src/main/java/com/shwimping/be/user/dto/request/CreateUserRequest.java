@@ -16,7 +16,7 @@ public record CreateUserRequest(
     @NotBlank(message = "비밀번호를 입력해주세요")
     String password
 ) {
-    public User toUser(PasswordEncoder passwordEncoder, NCPProperties ncpProperties) {
+    public User toUser(PasswordEncoder passwordEncoder, String cdnDomain) {
         String temporal = "temporal";
 
         return User.builder()
@@ -26,7 +26,7 @@ public record CreateUserRequest(
                 .provider(SELF)
                 .nickname(temporal)
                 .isAlarmAllowed(true)
-                .profileImageUrl(ncpProperties.s3().endpoint() + ncpProperties.s3().bucket() + "/profile/ic_profile.svg")
+                .profileImageUrl(cdnDomain + "/profile/ic_profile.svg")
                 .nowLocation(temporal)
                 .build();
     }

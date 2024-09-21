@@ -5,9 +5,9 @@ import com.shwimping.be.cardnews.domain.CardNews;
 import com.shwimping.be.cardnews.repository.CardNewsRepository;
 import com.shwimping.be.cardnews.repository.CardRepository;
 import com.shwimping.be.global.util.DummyDataInit;
-import com.shwimping.be.global.util.NCPProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 
@@ -22,9 +22,11 @@ import static com.shwimping.be.cardnews.domain.type.CardNewsCategory.HOT;
 @DummyDataInit
 public class CardNewsInitializer implements ApplicationRunner {
 
+    @Value("${cloud.aws.cdn.domain}")
+    private String cdnDomain;
+
     private final CardNewsRepository cardNewsRepository;
     private final CardRepository cardRepository;
-    private final NCPProperties ncpProperties;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -90,73 +92,73 @@ public class CardNewsInitializer implements ApplicationRunner {
 
             List<Card> cardList = new ArrayList<>();
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/swelter/1.jpg", cardNews1));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/swelter/2.jpg", cardNews1));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/swelter/3.jpg", cardNews1));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/swelter/4.jpg", cardNews1));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/swelter/5.jpg", cardNews1));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/swelter/6.jpg", cardNews1));
+            cardList.add(new Card(cdnDomain + "/news/shelter/swelter/1.jpg", cardNews1));
+            cardList.add(new Card(cdnDomain + "/news/shelter/swelter/2.jpg", cardNews1));
+            cardList.add(new Card(cdnDomain + "/news/shelter/swelter/3.jpg", cardNews1));
+            cardList.add(new Card(cdnDomain + "/news/shelter/swelter/4.jpg", cardNews1));
+            cardList.add(new Card(cdnDomain + "/news/shelter/swelter/5.jpg", cardNews1));
+            cardList.add(new Card(cdnDomain + "/news/shelter/swelter/6.jpg", cardNews1));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/smart/1.jpg", cardNews2));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/smart/2.jpg", cardNews2));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/smart/3.jpg", cardNews2));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/smart/4.jpg", cardNews2));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/shelter/smart/5.jpg", cardNews2));
+            cardList.add(new Card(cdnDomain + "/news/shelter/smart/1.jpg", cardNews2));
+            cardList.add(new Card(cdnDomain + "/news/shelter/smart/2.jpg", cardNews2));
+            cardList.add(new Card(cdnDomain + "/news/shelter/smart/3.jpg", cardNews2));
+            cardList.add(new Card(cdnDomain + "/news/shelter/smart/4.jpg", cardNews2));
+            cardList.add(new Card(cdnDomain + "/news/shelter/smart/5.jpg", cardNews2));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/sick/1.jpg", cardNews3));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/sick/2.jpg", cardNews3));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/sick/3.jpg", cardNews3));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/sick/4.jpg", cardNews3));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/sick/5.jpg", cardNews3));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/sick/6.jpg", cardNews3));
+            cardList.add(new Card(cdnDomain + "/news/hot/sick/1.jpg", cardNews3));
+            cardList.add(new Card(cdnDomain + "/news/hot/sick/2.jpg", cardNews3));
+            cardList.add(new Card(cdnDomain + "/news/hot/sick/3.jpg", cardNews3));
+            cardList.add(new Card(cdnDomain + "/news/hot/sick/4.jpg", cardNews3));
+            cardList.add(new Card(cdnDomain + "/news/hot/sick/5.jpg", cardNews3));
+            cardList.add(new Card(cdnDomain + "/news/hot/sick/6.jpg", cardNews3));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/1.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/2.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/3.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/4.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/5.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/6.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/7.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/8.jpg", cardNews4));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/solution/9.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/1.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/2.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/3.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/4.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/5.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/6.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/7.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/8.jpg", cardNews4));
+            cardList.add(new Card(cdnDomain + "/news/hot/solution/9.jpg", cardNews4));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/countryside/%EB%82%B4%EC%A7%800.png", cardNews5));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/countryside/%EB%82%B4%EC%A7%8001.png", cardNews5));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/countryside/%EB%82%B4%EC%A7%8002.png", cardNews5));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/countryside/%EB%82%B4%EC%A7%8003.png", cardNews5));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/countryside/%EB%82%B4%EC%A7%8004.png", cardNews5));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/hot/countryside/%EB%82%B4%EC%A7%8005.png", cardNews5));
+            cardList.add(new Card(cdnDomain + "/news/hot/countryside/%EB%82%B4%EC%A7%800.png", cardNews5));
+            cardList.add(new Card(cdnDomain + "/news/hot/countryside/%EB%82%B4%EC%A7%8001.png", cardNews5));
+            cardList.add(new Card(cdnDomain + "/news/hot/countryside/%EB%82%B4%EC%A7%8002.png", cardNews5));
+            cardList.add(new Card(cdnDomain + "/news/hot/countryside/%EB%82%B4%EC%A7%8003.png", cardNews5));
+            cardList.add(new Card(cdnDomain + "/news/hot/countryside/%EB%82%B4%EC%A7%8004.png", cardNews5));
+            cardList.add(new Card(cdnDomain + "/news/hot/countryside/%EB%82%B4%EC%A7%8005.png", cardNews5));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/1.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/2.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/3.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/4.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/5.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/6.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/7.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/8.jpg", cardNews6));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/disease/9.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/1.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/2.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/3.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/4.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/5.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/6.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/7.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/8.jpg", cardNews6));
+            cardList.add(new Card(cdnDomain + "/news/cold/disease/9.jpg", cardNews6));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/1.jpg", cardNews7));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/2.jpg", cardNews7));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/3.jpg", cardNews7));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/4.jpg", cardNews7));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/5.jpg", cardNews7));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/6.jpg", cardNews7));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/7.jpg", cardNews7));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/snow/8.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/1.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/2.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/3.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/4.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/5.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/6.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/7.jpg", cardNews7));
+            cardList.add(new Card(cdnDomain + "/news/cold/snow/8.jpg", cardNews7));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/1.jpg", cardNews8));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/2.jpg", cardNews8));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/3.jpg", cardNews8));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/4.jpg", cardNews8));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/5.jpg", cardNews8));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/6.jpg", cardNews8));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/7.jpg", cardNews8));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/blinker/8.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/1.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/2.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/3.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/4.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/5.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/6.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/7.jpg", cardNews8));
+            cardList.add(new Card(cdnDomain + "/news/cold/blinker/8.jpg", cardNews8));
 
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/solution/1.jpg", cardNews9));
-            cardList.add(new Card(ncpProperties.s3().endpoint() + "/" + ncpProperties.s3().bucket() + "/news/cold/solution/2.jpg", cardNews9));
+            cardList.add(new Card(cdnDomain + "/news/cold/solution/1.jpg", cardNews9));
+            cardList.add(new Card(cdnDomain + "/news/cold/solution/2.jpg", cardNews9));
 
             cardNewsRepository.saveAll(cardNewsList);
             cardRepository.saveAll(cardList);

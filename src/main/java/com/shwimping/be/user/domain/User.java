@@ -70,7 +70,7 @@ public class User {
         this.nowLocation = nowLocation;
     }
 
-    public static User of(OAuthInfoResponse oAuthInfoResponse, NCPProperties ncpProperties) {
+    public static User of(OAuthInfoResponse oAuthInfoResponse, String cdnDomain) {
         return User.builder()
                 .fcmToken("temporal")
                 .email(oAuthInfoResponse.getEmail())
@@ -78,7 +78,7 @@ public class User {
                 .nickname(oAuthInfoResponse.getNickname())
                 .socialId(oAuthInfoResponse.getId())
                 .isAlarmAllowed(true)
-                .profileImageUrl(ncpProperties.s3().endpoint() + ncpProperties.s3().bucket() + "/profile/ic_profile.svg")
+                .profileImageUrl(cdnDomain + "/profile/ic_profile.svg")
                 .nowLocation("temporal")
                 .build();
     }

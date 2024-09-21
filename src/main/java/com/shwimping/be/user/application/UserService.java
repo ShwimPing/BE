@@ -14,6 +14,7 @@ import com.shwimping.be.user.exception.UserNotFoundException;
 import com.shwimping.be.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +32,17 @@ import static com.shwimping.be.user.exception.errorcode.UserErrorCode.USER_NOT_F
 @Transactional(readOnly = true)
 public class UserService {
 
+    @Value("${cloud.aws.cdn.domain}")
+    private String cdnDomain;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final NCPProperties ncpProperties;
     private final NCPStorageService ncpStorageService;
 
     @Transactional
     public void createUser(CreateUserRequest request) {
         if (!userRepository.existsByEmailAndProvider(request.email(), Provider.SELF)) {
-            User user = request.toUser(passwordEncoder, ncpProperties);
+            User user = request.toUser(passwordEncoder, cdnDomain);
             userRepository.save(user);
         } else {
             throw new InvalidEmailException(INVALID_EMAIL);
@@ -66,7 +69,7 @@ public class UserService {
     }
 
     private User getUser(OAuthInfoResponse oAuthInfoResponse) {
-        User user = User.of(oAuthInfoResponse, ncpProperties);
+        User user = User.of(oAuthInfoResponse, cdnDomain);
         userRepository.save(user);
         return user;
     }
