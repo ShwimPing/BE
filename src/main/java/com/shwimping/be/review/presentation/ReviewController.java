@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,6 +58,20 @@ public class ReviewController {
             @RequestPart(required = false) MultipartFile file) {
 
         reviewService.uploadReview(userId, reviewUploadRequest, file);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.EMPTY_RESPONSE);
+    }
+
+    // 리뷰 삭제
+    @Operation(summary = "리뷰 삭제", description = "리뷰 삭제, 본인의 리뷰만 삭제 가능")
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<ResponseTemplate<?>> deleteReview(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long reviewId) {
+
+        reviewService.deleteReview(userId, reviewId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
