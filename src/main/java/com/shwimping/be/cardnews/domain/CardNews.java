@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "card_news")
@@ -31,7 +32,7 @@ public class CardNews {
     private CardNewsCategory cardNewsCategory;
 
     @OneToMany(mappedBy = "cardNews")
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     @Builder
     public CardNews(String title, String content, CardNewsCategory cardNewsCategory, List<Card> cards) {

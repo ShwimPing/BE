@@ -14,8 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.shwimping.be.cardnews.domain.type.CardNewsCategory.COLD;
-import static com.shwimping.be.cardnews.domain.type.CardNewsCategory.HOT;
+import static com.shwimping.be.cardnews.domain.type.CardNewsCategory.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,12 +36,12 @@ public class CardNewsInitializer implements ApplicationRunner {
 
             CardNews cardNews1 = CardNews.builder()
                     .title("폭염에 알아두면 좋은 무더위쉼터에 관한 모든것")
-                    .cardNewsCategory(HOT)
+                    .cardNewsCategory(OTHER)
                     .build();
 
             CardNews cardNews2 = CardNews.builder()
                     .title("우리 동네 버스정류장, 일상 속 작은 쉼터")
-                    .cardNewsCategory(HOT)
+                    .cardNewsCategory(OTHER)
                     .build();
 
             CardNews cardNews3 = CardNews.builder()

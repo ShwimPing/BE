@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum CardNewsCategory {
     HOT("폭염"),
     COLD("한파"),
+    OTHER("기타")
     ;
 
     private final String name;

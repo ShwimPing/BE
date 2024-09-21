@@ -23,13 +23,13 @@ public class CardNewsController {
     private final CardNewsService cardNewsService;
 
     // 카드뉴스 리스트 조회
-    @Operation(summary = "카드뉴스 리스트 조회", description = "카드뉴스 리스트 조회")
+    @Operation(summary = "카드뉴스 리스트 조회", description = "폭염관련 카드뉴스 - HOT, 한파관련 카드뉴스 - COLD, 쉼터 등 기타 카드뉴스 - OTHER 로 구분하였습니다<br>" +
+            "현재는 쉼터 관련 카드뉴스를 default로 조회하도록 설정하였습니다")
     @GetMapping
     public ResponseEntity<ResponseTemplate<?>> getCardNewsList(
-            @RequestParam(defaultValue = "HOT") CardNewsCategory cardNewsCategory
-            ) {
+            @RequestParam(defaultValue = "OTHER") CardNewsCategory cardNewsCategory) {
 
-        CardNewsResponseList response = cardNewsService.getCardNewsList(cardNewsCategory);
+        CardNewsResponseList response = CardNewsResponseList.from(cardNewsService.getCardNewsList(cardNewsCategory));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -40,10 +40,9 @@ public class CardNewsController {
     @Operation(summary = "카드뉴스 상세 조회", description = "카드뉴스 상세 조회")
     @GetMapping("/{cardNewsId}")
     public ResponseEntity<ResponseTemplate<?>> getCardNewsDetail(
-            @PathVariable Long cardNewsId
-    ) {
+            @PathVariable Long cardNewsId) {
 
-        CardNewsDetailResponse response = cardNewsService.getCardNewsDetail(cardNewsId);
+        CardNewsDetailResponse response = CardNewsDetailResponse.from(cardNewsService.getCardNewsDetail(cardNewsId));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
