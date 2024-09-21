@@ -30,7 +30,7 @@ public class CardNews {
     @Column(name = "category", nullable = false)
     private CardNewsCategory cardNewsCategory;
 
-    @OneToMany(mappedBy = "cardNews", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cardNews")
     private List<Card> cards;
 
     @Builder
