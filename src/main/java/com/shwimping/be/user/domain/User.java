@@ -95,4 +95,8 @@ public class User {
             this.profileImageUrl = profileImageUrl;
         }
     }
+
+    public void updateAlarm() {
+        this.isAlarmAllowed = !this.isAlarmAllowed;
+    }
 }

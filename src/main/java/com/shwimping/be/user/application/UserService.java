@@ -126,6 +126,13 @@ public class UserService {
         return MypageResponse.from(user);
     }
 
+    // 푸시 알림 설정
+    @Transactional
+    public void updateAlarm(Long userId) {
+        User user = getUserById(userId);
+        user.updateAlarm();
+    }
+
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
