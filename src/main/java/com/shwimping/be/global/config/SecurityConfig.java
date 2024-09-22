@@ -37,6 +37,7 @@ public class SecurityConfig {
             "/global/health-check",
             "/places/**",
             "/reviews/*",
+            "/card-news/**",
             "/feign/**",
             "/actuator/**"
     };
