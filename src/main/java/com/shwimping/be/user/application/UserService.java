@@ -2,12 +2,12 @@ package com.shwimping.be.user.application;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.global.application.NCPStorageService;
-import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.domain.type.Region;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.dto.request.SaveProfileRequest;
+import com.shwimping.be.user.dto.response.MypageResponse;
 import com.shwimping.be.user.dto.response.WeatherResponse;
 import com.shwimping.be.user.exception.InvalidEmailException;
 import com.shwimping.be.user.exception.UserNotFoundException;
@@ -96,20 +96,6 @@ public class UserService {
         }
     }
 
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-    }
-
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-    }
-
-    public boolean validateNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
-    }
-
     public List<String> getUsersByLocation(List<WeatherResponse> responses) {
         List<String> userList = new ArrayList<>();
 
@@ -132,5 +118,25 @@ public class UserService {
         }
 
         return userList;
+    }
+
+    // 마이페이지 유저 정보 조회
+    public MypageResponse getMypage(Long userId) {
+        User user = getUserById(userId);
+        return MypageResponse.from(user);
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+    }
+
+    public boolean validateNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 }
