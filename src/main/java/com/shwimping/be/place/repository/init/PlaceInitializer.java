@@ -14,6 +14,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -33,9 +36,11 @@ public class PlaceInitializer implements ApplicationRunner {
         } else {
             importCsvToPlace("data/기후동행쉼터.csv", 4, 9, 10, Category.TOGETHER, 2, 3, 7, 8);
             importCsvToPlace("data/도서관 쉼터.csv", 6, 7, 8, Category.LIBRARY, 2, 1, 3, 4);
-            importCsvToPlace("data/서울시 무더위쉼터.csv", 3, 7, 8, Category.HOT, 2, 11, Integer.MAX_VALUE, Integer.MAX_VALUE);
+            importCsvToPlace("data/서울시 무더위쉼터.csv", 3, 7, 8, Category.HOT, 2, 11, Integer.MAX_VALUE,
+                    Integer.MAX_VALUE);
             importCsvToPlace("data/서울시 한파쉼터.csv", 2, 9, 10, Category.COLD, 1, 14, 7, 8);
-            importCsvToPlace("data/스마트쉼터 현황.csv", 4, 6, 7, Category.SMART, 2, 1, Integer.MAX_VALUE, Integer.MAX_VALUE);
+            importCsvToPlace("data/스마트쉼터 현황.csv", 4, 6, 7, Category.SMART, 2, 1, Integer.MAX_VALUE,
+                    Integer.MAX_VALUE);
         }
     }
 
@@ -75,8 +80,7 @@ public class PlaceInitializer implements ApplicationRunner {
                         .openTime(openTime)
                         .closeTime(closeTime)
                         .address(address)
-                        .longitude(longitude)
-                        .latitude(latitude)
+                        .location(createPoint(latitude, longitude))
                         .category(category)
                         .restInfo(restInfo)
                         .build();
@@ -86,5 +90,12 @@ public class PlaceInitializer implements ApplicationRunner {
         } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Point createPoint(double latitude, double longitude) {
+        GeometryFactory geometryFactory = new GeometryFactory();
+        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+        point.setSRID(4326); // SRID를 4326으로 설정
+        return point;
     }
 }
