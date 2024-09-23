@@ -36,11 +36,9 @@ public class PlaceInitializer implements ApplicationRunner {
         } else {
             importCsvToPlace("data/기후동행쉼터.csv", 4, 9, 10, Category.TOGETHER, 2, 3, 7, 8);
             importCsvToPlace("data/도서관 쉼터.csv", 6, 7, 8, Category.LIBRARY, 2, 1, 3, 4);
-            importCsvToPlace("data/서울시 무더위쉼터.csv", 3, 7, 8, Category.HOT, 2, 11, Integer.MAX_VALUE,
-                    Integer.MAX_VALUE);
+            importCsvToPlace("data/서울시 무더위쉼터.csv", 3, 7, 8, Category.HOT, 2, 11, Integer.MAX_VALUE, Integer.MAX_VALUE);
             importCsvToPlace("data/서울시 한파쉼터.csv", 2, 9, 10, Category.COLD, 1, 14, 7, 8);
-            importCsvToPlace("data/스마트쉼터 현황.csv", 4, 6, 7, Category.SMART, 2, 1, Integer.MAX_VALUE,
-                    Integer.MAX_VALUE);
+            importCsvToPlace("data/스마트쉼터 현황.csv", 4, 6, 7, Category.SMART, 2, 1, Integer.MAX_VALUE, Integer.MAX_VALUE);
         }
     }
 
