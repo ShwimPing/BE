@@ -92,7 +92,8 @@ public class PlaceController {
                 .body(ResponseTemplate.from(shelterRecommendAI));
     }
 
-    @Operation(summary = "장소 상세 조회", description = "장소 상세 정보와 리뷰를 조회 - 최신순")
+    @Operation(summary = "장소 상세 조회", description = "장소 상세 정보와 리뷰를 조회 - 최신순<br>" +
+            "이 API를 통해 리뷰를 확인할 수 있음 - 해당 api 다음에 /reviews/{placeId} API를 호출해야함 - 마지막으로 나온 reviewId를 다음 API에 넣어야함, 511번 place에 더미 데이터 존재")
     @GetMapping("/detail")
     public ResponseEntity<ResponseTemplate<?>> getPlaceDetail(
             @AuthenticationPrincipal Long userId,
