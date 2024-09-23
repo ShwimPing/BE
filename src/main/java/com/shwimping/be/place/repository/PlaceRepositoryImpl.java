@@ -7,6 +7,7 @@ import static com.shwimping.be.review.domain.QReview.review;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,10 +18,13 @@ import com.shwimping.be.place.dto.response.PlaceDetailWithReviews;
 import com.shwimping.be.place.dto.response.SearchPlaceResponse;
 import com.shwimping.be.review.dto.response.ReviewSimpleResponse;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
-import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 @Repository
@@ -48,11 +52,12 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 )
                 .from(place)
                 .leftJoin(place.reviewList, review)
-                .where(distanceTemplate(longitude, latitude).loe(maxDistance), place.category.in(categoryList),
+                .where(rangeTemplate(longitude, latitude, maxDistance),
+                        place.category.in(categoryList),
                         keywordSearchExpression(keyword))
                 .groupBy(place.id)
                 .orderBy(orderExpression(sortType, longitude, latitude), reviewCntOrder()) // 정렬 조건 추가
-                .offset(page * size) // 페이지 번호에 따라 결과를 10개씩 가져오도록 설정
+                .offset(page * size) // 페이지 번호에 따라 결과를 가져오도록 설정
                 .limit(size)
                 .fetch();
     }
@@ -71,7 +76,21 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
 
     private NumberTemplate<Long> distanceTemplate(double longitude, double latitude) {
         return Expressions.numberTemplate(Long.class,
-                "ST_Distance_Sphere(point({0}, {1}), point(place.longitude, place.latitude))", longitude, latitude);
+                "ST_Distance_Sphere({0}, location)",
+                createPoint(latitude, longitude));
+    }
+
+    private BooleanTemplate rangeTemplate(double longitude, double latitude, int maxDistance) {
+        return Expressions.booleanTemplate(
+                "ST_CONTAINS(ST_BUFFER({0}, {1}), location)",
+                createPoint(latitude, longitude), maxDistance);
+    }
+
+    private Point createPoint(double latitude, double longitude) {
+        GeometryFactory geometryFactory = new GeometryFactory();
+        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+        point.setSRID(4326); // SRID를 4326으로 설정
+        return point;
     }
 
     private BooleanExpression keywordSearchExpression(String keyword) {
@@ -83,11 +102,12 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
     }
 
     public Long countByLocationWithDistance(
-            double longitude, double latitude, int maxDistant, List<Category> categoryList) {
+            double longitude, double latitude, int maxDistance, List<Category> categoryList) {
 
         return jpaQueryFactory.select(place.count())
                 .from(place)
-                .where(distanceTemplate(longitude, latitude).loe(maxDistant), place.category.in(categoryList))
+                .where(rangeTemplate(longitude, latitude, maxDistance),
+                        place.category.in(categoryList))
                 .fetchOne();
     }
 

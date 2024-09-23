@@ -14,6 +14,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -75,8 +78,7 @@ public class PlaceInitializer implements ApplicationRunner {
                         .openTime(openTime)
                         .closeTime(closeTime)
                         .address(address)
-                        .longitude(longitude)
-                        .latitude(latitude)
+                        .location(createPoint(latitude, longitude))
                         .category(category)
                         .restInfo(restInfo)
                         .build();
@@ -86,5 +88,12 @@ public class PlaceInitializer implements ApplicationRunner {
         } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Point createPoint(double latitude, double longitude) {
+        GeometryFactory geometryFactory = new GeometryFactory();
+        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+        point.setSRID(4326); // SRID를 4326으로 설정
+        return point;
     }
 }

@@ -29,7 +29,7 @@ public class MongoPlaceInitializer implements ApplicationRunner {
                 MongoPlace mongoPlace = MongoPlace.builder()
                         .category(place.getCategory())
                         .address(place.getAddress())
-                        .location(new GeoJsonPoint(place.getLongitude(), place.getLatitude()))
+                        .location(new GeoJsonPoint(place.getLocation().getX(), place.getLocation().getY()))
                         .placeId(place.getId())
                         .build();
 
