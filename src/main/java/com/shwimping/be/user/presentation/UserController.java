@@ -2,9 +2,9 @@ package com.shwimping.be.user.presentation;
 
 import com.shwimping.be.bookmark.application.BookMarkService;
 import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponseList;
-import com.shwimping.be.bookmark.repository.BookMarkRepository;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.review.application.ReviewService;
+import com.shwimping.be.review.dto.response.ReviewSimpleResponseList;
 import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.dto.request.UpdateProfileRequest;
 import com.shwimping.be.user.dto.response.MypageResponse;
@@ -82,9 +82,11 @@ public class UserController {
             @RequestParam Long lastReviewId,
             @RequestParam(defaultValue = "5") Long size) {
 
+        ReviewSimpleResponseList responseList = reviewService.getMyReview(userId, lastReviewId, size);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseTemplate.from(reviewService.getMyReview(userId, lastReviewId, size)));
+                .body(ResponseTemplate.from(responseList));
     }
 
     @Operation(summary = "푸시 알림 설정", description = "푸시 알림 on/off 설정 기능")

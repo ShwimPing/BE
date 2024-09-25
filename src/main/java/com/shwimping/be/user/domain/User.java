@@ -97,7 +97,9 @@ public class User {
     }
 
     public void updateProfile(UpdateProfileRequest request, String profileImageUrl) {
-        this.nickname = request.nickname();
+        if(!request.nickname().isEmpty()) {
+            this.nickname = request.nickname();
+        }
 
         if (!profileImageUrl.isEmpty()) {
             this.profileImageUrl = profileImageUrl;
