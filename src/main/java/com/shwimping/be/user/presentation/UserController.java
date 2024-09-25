@@ -63,9 +63,11 @@ public class UserController {
     @Operation(summary = "북마크 조회", description = "북마크 조회")
     @GetMapping("/bookmark")
     public ResponseEntity<ResponseTemplate<?>> getMyBookmark(
-            @AuthenticationPrincipal Long userId) {
+            @AuthenticationPrincipal Long userId,
+            @RequestParam Long lastBookMarkId,
+            @RequestParam(defaultValue = "5") Long size) {
 
-        BookMarkPlaceResponseList responseList = BookMarkPlaceResponseList.from(bookMarkService.getMyBookMark(userId));
+        BookMarkPlaceResponseList responseList = bookMarkService.getMyBookMark(userId, lastBookMarkId, size);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

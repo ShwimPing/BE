@@ -9,6 +9,7 @@ import java.time.LocalTime;
 
 @Builder
 public record BookMarkPlaceResponse(
+        Long bookMarkId,
         Long placeId,
         String name,
         String address,

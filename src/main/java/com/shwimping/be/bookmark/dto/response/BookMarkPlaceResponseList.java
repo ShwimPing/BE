@@ -3,9 +3,10 @@ package com.shwimping.be.bookmark.dto.response;
 import java.util.List;
 
 public record BookMarkPlaceResponseList(
+        Boolean hasNext,
         List<BookMarkPlaceResponse> bookMarkList
 ) {
-    public static BookMarkPlaceResponseList from(List<BookMarkPlaceResponse> bookMarkPlaceResponseList) {
-        return new BookMarkPlaceResponseList(bookMarkPlaceResponseList);
+    public static BookMarkPlaceResponseList of(Boolean hasNext, List<BookMarkPlaceResponse> bookMarkPlaceResponseList) {
+        return new BookMarkPlaceResponseList(hasNext, bookMarkPlaceResponseList);
     }
 }

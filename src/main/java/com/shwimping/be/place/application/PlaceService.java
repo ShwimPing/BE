@@ -65,8 +65,4 @@ public class PlaceService {
         return placeRepository.findById(placeId)
                 .orElseThrow(() -> new PlaceNotFoundException(PlaceErrorCode.PLACE_NOT_FOUND));
     }
-
-    public List<BookMarkPlaceResponse> getBookMarkPlace(List<BookMark> bookMarkList) {
-        return placeRepository.findAllByBookMark(bookMarkList);
-    }
 }

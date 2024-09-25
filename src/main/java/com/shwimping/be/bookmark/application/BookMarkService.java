@@ -2,6 +2,7 @@ package com.shwimping.be.bookmark.application;
 
 import com.shwimping.be.bookmark.domain.BookMark;
 import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponse;
+import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponseList;
 import com.shwimping.be.bookmark.repository.BookMarkRepository;
 import com.shwimping.be.place.application.PlaceService;
 import com.shwimping.be.place.domain.Place;
@@ -36,9 +37,15 @@ public class BookMarkService {
                         () -> bookMarkRepository.save(BookMark.of(user, place)));
     }
 
-    public List<BookMarkPlaceResponse> getMyBookMark(Long userId) {
-        User user = userService.getUserById(userId);
-        List<BookMark> bookMarkList = bookMarkRepository.findAllByUser(user);
-        return placeService.getBookMarkPlace(bookMarkList);
+    public BookMarkPlaceResponseList getMyBookMark(Long userId, Long lastBookMarkId, Long size) {
+        if (lastBookMarkId == 0) {
+            lastBookMarkId = bookMarkRepository.countBookMarkByUserId(userId);
+        }
+
+        List<BookMarkPlaceResponse> bookMarkList = bookMarkRepository.getBookMarkList(userId, lastBookMarkId, size);
+
+        Boolean hasNext = bookMarkRepository.hasNext(userId, lastBookMarkId, size);
+
+        return BookMarkPlaceResponseList.of(hasNext, bookMarkList);
     }
 }

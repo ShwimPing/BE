@@ -7,8 +7,6 @@ import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.shwimping.be.bookmark.domain.BookMark;
-import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponse;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.PlaceDetailResponse;
@@ -162,25 +160,5 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .fetchOne();
 
         return new PlaceDetailWithReviews(hasNext, placeDetailResponse, recentReviews);
-    }
-
-    public List<BookMarkPlaceResponse> findAllByBookMark(List<BookMark> bookMarkList) {
-        return jpaQueryFactory.select(
-                        Projections.constructor(BookMarkPlaceResponse.class,
-                                place.id,
-                                place.name,
-                                place.address,
-                                place.category,
-                                place.openTime,
-                                place.closeTime,
-                                review.rating.avg().coalesce(0.0),
-                                review.id.count().coalesce(0L)
-                        )
-                )
-                .from(place)
-                .leftJoin(place.reviewList, review)
-                .where(place.bookMarkList.any().in(bookMarkList))
-                .groupBy(place.id)
-                .fetch();
     }
 }
