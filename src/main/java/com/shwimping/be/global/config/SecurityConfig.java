@@ -39,8 +39,7 @@ public class SecurityConfig {
             "/reviews/*",
             "/card-news/**",
             "/feign/**",
-            "/actuator/**",
-            "/mypage"
+            "/actuator/**"
     };
 
     @Bean

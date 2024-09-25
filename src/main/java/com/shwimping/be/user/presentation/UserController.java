@@ -32,9 +32,8 @@ public class UserController {
     private final UserService userService;
     private final ReviewService reviewService;
     private final BookMarkService bookMarkService;
-    private final BookMarkRepository bookMarkRepository;
 
-    @Operation(summary = "마이페이지 조회", description = "마이페이지 조회")
+    @Operation(summary = "마이페이지 조회", description = "토큰이 없는 유저(401)의 경우 '로그인 후 사용하세요' 등의 메세지를 띄워 해주세요")
     @GetMapping
     public ResponseEntity<ResponseTemplate<?>> getMypage(
             @AuthenticationPrincipal Long userId) {
@@ -60,7 +59,8 @@ public class UserController {
                 .body(EMPTY_RESPONSE);
     }
 
-    @Operation(summary = "북마크 조회", description = "북마크 조회")
+    @Operation(summary = "북마크 조회", description = "북마크 처음 조회 시 lastBookMarkId에 0을 넣어주세요<br>" +
+            "최근에 북마크를 한 순서대로 제공됩니다")
     @GetMapping("/bookmark")
     public ResponseEntity<ResponseTemplate<?>> getMyBookmark(
             @AuthenticationPrincipal Long userId,
