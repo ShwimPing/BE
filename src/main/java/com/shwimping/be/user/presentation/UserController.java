@@ -1,5 +1,8 @@
 package com.shwimping.be.user.presentation;
 
+import com.shwimping.be.bookmark.application.BookMarkService;
+import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponseList;
+import com.shwimping.be.bookmark.repository.BookMarkRepository;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.review.application.ReviewService;
 import com.shwimping.be.user.application.UserService;
@@ -28,6 +31,8 @@ public class UserController {
 
     private final UserService userService;
     private final ReviewService reviewService;
+    private final BookMarkService bookMarkService;
+    private final BookMarkRepository bookMarkRepository;
 
     @Operation(summary = "마이페이지 조회", description = "마이페이지 조회")
     @GetMapping
@@ -53,6 +58,18 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(EMPTY_RESPONSE);
+    }
+
+    @Operation(summary = "북마크 조회", description = "북마크 조회")
+    @GetMapping("/bookmark")
+    public ResponseEntity<ResponseTemplate<?>> getMyBookmark(
+            @AuthenticationPrincipal Long userId) {
+
+        BookMarkPlaceResponseList responseList = BookMarkPlaceResponseList.from(bookMarkService.getMyBookMark(userId));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ResponseTemplate.from(responseList));
     }
 
     @Operation(summary = "내 리뷰 모아보기", description = "리뷰 처음 조회 시 lastReviewId에 0을 넣어주세요<br>" +

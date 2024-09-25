@@ -1,5 +1,7 @@
 package com.shwimping.be.place.repository;
 
+import com.shwimping.be.bookmark.domain.BookMark;
+import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponse;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.type.Category;
 import com.shwimping.be.place.dto.response.PlaceDetailWithReviews;
@@ -14,4 +16,6 @@ public interface PlaceRepositoryCustom {
     Long countByLocationWithDistance(double longitude, double latitude, int maxDistant, List<Category> categoryList);
 
     PlaceDetailWithReviews findPlaceDetail(Long placeId, Long userId, Long size);
+
+    List<BookMarkPlaceResponse> findAllByBookMark(List<BookMark> bookMarkList);
 }

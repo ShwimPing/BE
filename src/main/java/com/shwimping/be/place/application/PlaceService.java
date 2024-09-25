@@ -1,5 +1,7 @@
 package com.shwimping.be.place.application;
 
+import com.shwimping.be.bookmark.domain.BookMark;
+import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponse;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.Place;
 import com.shwimping.be.place.domain.type.Category;
@@ -62,5 +64,9 @@ public class PlaceService {
     public Place getPlaceById(Long placeId) {
         return placeRepository.findById(placeId)
                 .orElseThrow(() -> new PlaceNotFoundException(PlaceErrorCode.PLACE_NOT_FOUND));
+    }
+
+    public List<BookMarkPlaceResponse> getBookMarkPlace(List<BookMark> bookMarkList) {
+        return placeRepository.findAllByBookMark(bookMarkList);
     }
 }

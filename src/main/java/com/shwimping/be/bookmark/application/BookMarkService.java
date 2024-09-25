@@ -1,6 +1,7 @@
 package com.shwimping.be.bookmark.application;
 
 import com.shwimping.be.bookmark.domain.BookMark;
+import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponse;
 import com.shwimping.be.bookmark.repository.BookMarkRepository;
 import com.shwimping.be.place.application.PlaceService;
 import com.shwimping.be.place.domain.Place;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,5 +34,11 @@ public class BookMarkService {
                 .ifPresentOrElse(
                         bookMarkRepository::delete,
                         () -> bookMarkRepository.save(BookMark.of(user, place)));
+    }
+
+    public List<BookMarkPlaceResponse> getMyBookMark(Long userId) {
+        User user = userService.getUserById(userId);
+        List<BookMark> bookMarkList = bookMarkRepository.findAllByUser(user);
+        return placeService.getBookMarkPlace(bookMarkList);
     }
 }
