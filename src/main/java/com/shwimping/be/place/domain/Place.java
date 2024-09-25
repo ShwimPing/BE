@@ -11,16 +11,20 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalTime;
 import java.util.List;
+import org.locationtech.jts.geom.Point;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "place")
+@Table(name = "place", indexes = {
+        @Index(name = "idx_place_location", columnList = "location")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -53,11 +57,8 @@ public class Place {
     @Column(name = "rest_info", nullable = false)
     private String restInfo;
 
-    @Column(name = "latitude", nullable = false)
-    private Double latitude;
-
-    @Column(name = "longitude", nullable = false)
-    private Double longitude;
+    @Column(name = "location", nullable = false, columnDefinition = "POINT SRID 4326")
+    private Point location;
 
     @OneToMany(mappedBy = "place", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Review> reviewList;
@@ -67,7 +68,7 @@ public class Place {
 
     @Builder
     public Place(String name, String region, Category category, String address, LocalTime openTime, LocalTime closeTime,
-                 String restInfo, Double latitude, Double longitude) {
+                 String restInfo, Point location) {
         this.name = name;
         this.region = region;
         this.category = category;
@@ -75,7 +76,6 @@ public class Place {
         this.openTime = openTime;
         this.closeTime = closeTime;
         this.restInfo = restInfo;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location = location;
     }
 }

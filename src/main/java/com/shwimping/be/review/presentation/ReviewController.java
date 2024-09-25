@@ -34,7 +34,8 @@ public class ReviewController {
 
     // 리뷰 리스트 조회
     @Operation(summary = "리뷰 리스트 조회", description = "장소별 리뷰 리스트 조회, lastReviewId를 기준으로 이전 리뷰 조회, 리뷰는 최신순으로 정렬<br>" +
-            "lastReviewId 이전(시간순서) review부터 size만큼 리뷰를 가져옴, place 511번이 더미 데이터 존재")
+            "lastReviewId 이전(시간순서) review부터 size만큼 리뷰를 가져옴, place 511번이 더미 데이터 존재 <br>"
+            + "/places/detail/{placeId} API를 통해 리뷰를 확인할 수 있음 - 해당 api 다음에 이 API를 호출해야함")
     @GetMapping("/{placeId}")
     public ResponseEntity<ResponseTemplate<?>> getReviewList(
             @PathVariable Long placeId,

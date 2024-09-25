@@ -11,12 +11,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "book_mark")
+@Table(name = "book_mark", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_id", "place_id"})
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -39,5 +42,12 @@ public class BookMark {
     public BookMark(User user, Place place) {
         this.user = user;
         this.place = place;
+    }
+
+    public static BookMark of(User user, Place place) {
+        return BookMark.builder()
+            .user(user)
+            .place(place)
+            .build();
     }
 }
