@@ -1,5 +1,7 @@
 package com.shwimping.be.place.application;
 
+import com.shwimping.be.bookmark.domain.BookMark;
+import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponse;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.Place;
 import com.shwimping.be.place.domain.type.Category;

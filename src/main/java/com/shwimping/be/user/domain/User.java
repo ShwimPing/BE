@@ -1,9 +1,9 @@
 package com.shwimping.be.user.domain;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
-import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.SaveProfileRequest;
+import com.shwimping.be.user.dto.request.UpdateProfileRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -87,12 +87,26 @@ public class User {
         this.nowLocation = location;
     }
 
-    public void updateProfile(SaveProfileRequest request, String profileImageUrl) {
+    public void saveProfile(SaveProfileRequest request, String profileImageUrl) {
         this.fcmToken = request.fcmToken();
         this.nickname = request.nickname();
 
         if (!profileImageUrl.isEmpty()) {
             this.profileImageUrl = profileImageUrl;
         }
+    }
+
+    public void updateProfile(UpdateProfileRequest request, String profileImageUrl) {
+        if(!request.nickname().isEmpty()) {
+            this.nickname = request.nickname();
+        }
+
+        if (!profileImageUrl.isEmpty()) {
+            this.profileImageUrl = profileImageUrl;
+        }
+    }
+
+    public void updateAlarm() {
+        this.isAlarmAllowed = !this.isAlarmAllowed;
     }
 }

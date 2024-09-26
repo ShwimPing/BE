@@ -2,18 +2,20 @@ package com.shwimping.be.user.application;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.global.application.NCPStorageService;
-import com.shwimping.be.global.util.NCPProperties;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.domain.type.Region;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
 import com.shwimping.be.user.dto.request.SaveProfileRequest;
+import com.shwimping.be.user.dto.request.UpdateProfileRequest;
+import com.shwimping.be.user.dto.response.MypageResponse;
 import com.shwimping.be.user.dto.response.WeatherResponse;
 import com.shwimping.be.user.exception.InvalidEmailException;
 import com.shwimping.be.user.exception.UserNotFoundException;
 import com.shwimping.be.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,26 +54,32 @@ public class UserService {
     @Transactional
     public User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
         return userRepository.findBySocialId(oAuthInfoResponse.getId())
-                .orElseGet(() -> getUser(oAuthInfoResponse));
+                .orElseGet(() -> saveUser(oAuthInfoResponse));
     }
 
+    private User saveUser(OAuthInfoResponse oAuthInfoResponse) {
+        return userRepository.save(User.of(oAuthInfoResponse, cdnDomain));
+    }
+
+    // 프로필 등록
     @Transactional
     public void saveProfile(Long userId, SaveProfileRequest request, MultipartFile file) {
         User user = getUserById(userId);
+        String profileImageUrl = uploadProfileImage(file);
+        user.saveProfile(request, profileImageUrl);
+    }
 
-        String profileImageUrl = "";
-
-        if (file != null) {
-            profileImageUrl = ncpStorageService.uploadFile(file, "profile");
-        }
-
+    // 프로필 수정
+    @Transactional
+    public void updateProfile(Long userId, UpdateProfileRequest request, MultipartFile file) {
+        User user = getUserById(userId);
+        String profileImageUrl = uploadProfileImage(file);
         user.updateProfile(request, profileImageUrl);
     }
 
-    private User getUser(OAuthInfoResponse oAuthInfoResponse) {
-        User user = User.of(oAuthInfoResponse, cdnDomain);
-        userRepository.save(user);
-        return user;
+    // 프로필 이미지가 없을 경우 빈 문자열 반환, 있을 경우 S3에 업로드
+    private String uploadProfileImage(MultipartFile file) {
+        return ObjectUtils.isEmpty(file) ? "" : ncpStorageService.uploadFile(file, "profile");
     }
 
     @Transactional
@@ -96,20 +104,6 @@ public class UserService {
         }
     }
 
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-    }
-
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
-    }
-
-    public boolean validateNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
-    }
-
     public List<String> getUsersByLocation(List<WeatherResponse> responses) {
         List<String> userList = new ArrayList<>();
 
@@ -132,5 +126,32 @@ public class UserService {
         }
 
         return userList;
+    }
+
+    // 마이페이지 유저 정보 조회
+    public MypageResponse getMypage(Long userId) {
+        User user = getUserById(userId);
+        return MypageResponse.from(user);
+    }
+
+    // 푸시 알림 설정
+    @Transactional
+    public void updateAlarm(Long userId) {
+        User user = getUserById(userId);
+        user.updateAlarm();
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+    }
+
+    public boolean validateNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 }
