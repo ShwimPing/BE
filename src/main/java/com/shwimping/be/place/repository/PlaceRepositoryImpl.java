@@ -155,7 +155,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 )
                 .from(place)
                 .leftJoin(review).on(review.place.id.eq(place.id))
-                .leftJoin(bookMark).on(bookMark.place.id.eq(place.id).and(bookMark.id.eq(userId)))
+                .leftJoin(bookMark).on(bookMark.place.id.eq(place.id).and(bookMark.user.id.eq(userId)))
                 .where(place.id.eq(placeId))
                 .fetchOne();
 
