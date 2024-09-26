@@ -19,7 +19,6 @@ public class RequestOAuthInfoService {
 
     public OAuthInfoResponse request(Provider provider, OAuthLoginRequest request) {
         OAuthApiClient client = clients.get(provider.getProvider());
-        String accessToken = client.requestAccessToken(request);
-        return client.requestOauthInfo(accessToken);
+        return client.requestOauthInfo(request.accessToken());
     }
 }
