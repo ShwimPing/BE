@@ -54,13 +54,11 @@ public class UserService {
     @Transactional
     public User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
         return userRepository.findBySocialId(oAuthInfoResponse.getId())
-                .orElseGet(() -> getUser(oAuthInfoResponse));
+                .orElseGet(() -> saveUser(oAuthInfoResponse));
     }
 
-    private User getUser(OAuthInfoResponse oAuthInfoResponse) {
-        User user = User.of(oAuthInfoResponse, cdnDomain);
-        userRepository.save(user);
-        return user;
+    private User saveUser(OAuthInfoResponse oAuthInfoResponse) {
+        return userRepository.save(User.of(oAuthInfoResponse, cdnDomain));
     }
 
     // 프로필 등록
