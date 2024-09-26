@@ -41,6 +41,16 @@ public class ReviewService {
         return ReviewSimpleResponseList.of(hasNext, reviewSimpleResponse);
     }
 
+    public ReviewSimpleResponseList getMyReview(Long userId, Long lastReviewId, Long size) {
+
+        List<ReviewSimpleResponse> reviewSimpleResponse = (lastReviewId == 0)
+                ? reviewRepository.getMyFirstReview(userId) : reviewRepository.getMyReview(userId, lastReviewId, size);
+
+        Boolean hasNext = reviewRepository.hasNextMyReview(userId, lastReviewId, size);
+
+        return ReviewSimpleResponseList.of(hasNext, reviewSimpleResponse);
+    }
+
     @Transactional
     public void uploadReview(Long userId, ReviewUploadRequest reviewUploadRequest, MultipartFile file) {
 

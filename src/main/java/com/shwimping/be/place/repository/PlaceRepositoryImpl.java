@@ -1,9 +1,5 @@
 package com.shwimping.be.place.repository;
 
-import static com.shwimping.be.bookmark.domain.QBookMark.bookMark;
-import static com.shwimping.be.place.domain.QPlace.place;
-import static com.shwimping.be.review.domain.QReview.review;
-
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -25,6 +21,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+
+import static com.shwimping.be.bookmark.domain.QBookMark.bookMark;
+import static com.shwimping.be.place.domain.QPlace.place;
+import static com.shwimping.be.review.domain.QReview.review;
 
 @RequiredArgsConstructor
 @Repository
