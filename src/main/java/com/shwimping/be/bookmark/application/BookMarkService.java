@@ -8,6 +8,7 @@ import com.shwimping.be.place.application.PlaceService;
 import com.shwimping.be.place.domain.Place;
 import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.domain.User;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,29 @@ public class BookMarkService {
     private final PlaceService placeService;
 
     @Transactional
-    public void saveBookMark(Long userId, Long placeId) {
+    public String saveBookMark(Long userId, Long placeId) {
         User user = userService.getUserById(userId);
         Place place = placeService.getPlaceById(placeId);
+
+        AtomicBoolean isCreated = new AtomicBoolean(false);
 
         // 북마크가 이미 존재하면 삭제, 존재하지 않으면 저장
         bookMarkRepository.findByUserAndPlace(user, place)
                 .ifPresentOrElse(
-                        bookMarkRepository::delete,
-                        () -> bookMarkRepository.save(BookMark.of(user, place)));
+                        bookmark -> {
+                            bookMarkRepository.delete(bookmark);
+                            isCreated.set(false);
+                        },
+                        () -> {
+                            bookMarkRepository.save(BookMark.of(user, place));
+                            isCreated.set(true);
+                        });
+
+        if (isCreated.get()) {
+            return "북마크 저장 성공";
+        } else {
+            return "북마크 삭제 성공";
+        }
     }
 
     public BookMarkPlaceResponseList getMyBookMark(Long userId, Long lastBookMarkId, Long size) {

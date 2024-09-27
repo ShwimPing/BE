@@ -27,10 +27,10 @@ public class BookMarkController {
             @AuthenticationPrincipal Long userId,
             @PathVariable Long placeId
     ) {
-        bookMarkService.saveBookMark(userId, placeId);
+        String result = bookMarkService.saveBookMark(userId, placeId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ResponseTemplate.EMPTY_RESPONSE);
+                .body(ResponseTemplate.from(result));
     }
 }
