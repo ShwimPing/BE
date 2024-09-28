@@ -13,10 +13,12 @@
 - **Monitoring**: Prometheus, Grafana, Loki
 
 ### 🌱 ERD
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/2748f315-1b0d-45ee-a015-bd8b9b2b1ad0/00a14a64-108f-495e-ab75-8059b370b5fd/image.png)
+![image](https://github.com/user-attachments/assets/8820d7a5-5b7d-4c8a-9e87-05617895a063)
+
 
 ### 🛠️ Infra Structure
-![shwimping 인프라.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/2748f315-1b0d-45ee-a015-bd8b9b2b1ad0/f3afe54d-c4af-49cc-a9bb-b6764a8623ba/shwimping_%EC%9D%B8%ED%94%84%EB%9D%BC.png)
+![image](https://github.com/user-attachments/assets/c303fa7b-7cd3-4aa2-843d-9e18193cc707)
+
 
 ## 🗂️ Project Structure
 
