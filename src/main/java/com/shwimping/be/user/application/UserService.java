@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class UserService {
     // 사용자의 위치 정보를 업데이트
     @Transactional
     public void updateUserLocation(Long userId, String location) {
-        if (userId > 0) {
+        if (userId > 0 && StringUtils.hasText(location)) {
             userRepository.findById(userId)
                     .ifPresentOrElse(
                             user -> user.updateLocation(location),
