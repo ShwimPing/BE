@@ -30,7 +30,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .from(review)
                 .where(review.place.id.eq(placeId), review.id.lt(lastReviewId)) // lastReviewId를 기준으로 필터링
                 .orderBy(review.id.desc())
-                .limit(size) // 가져올 리뷰 수 제한
+                .limit(size + 1) // 가져올 리뷰 수 제한
                 .fetch();
     }
 
@@ -70,14 +70,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .orderBy(review.id.desc())
                 .limit(size) // 가져올 리뷰 수 제한
                 .fetch();
-    }
-
-    @Override
-    public Boolean hasNext(Long placeId, Long lastReviewId, Long size) {
-        return jpaQueryFactory.selectOne()
-                .from(review)
-                .where(review.place.id.eq(placeId), review.id.lt(lastReviewId - size))
-                .fetchFirst() != null;
     }
 
     @Override

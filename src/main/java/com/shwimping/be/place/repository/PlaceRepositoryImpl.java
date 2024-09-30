@@ -58,7 +58,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .groupBy(place.id)
                 .orderBy(orderExpression(sortType, longitude, latitude), reviewCntOrder()) // 정렬 조건 추가
                 .offset(page * size) // 페이지 번호에 따라 결과를 가져오도록 설정
-                .limit(size)
+                .limit(size + 1)
                 .fetch();
     }
 
@@ -101,16 +101,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
         }
     }
 
-    public Long countByLocationWithDistance(
-            double longitude, double latitude, int maxDistance, List<Category> categoryList) {
-
-        return jpaQueryFactory.select(place.count())
-                .from(place)
-                .where(rangeTemplate(longitude, latitude, maxDistance),
-                        place.category.in(categoryList))
-                .fetchOne();
-    }
-
     @Override
     public PlaceDetailWithReviews findPlaceDetail(Long placeId, Long userId, Long size) {
         // 리뷰를 최신 5개만 가져오기 위한 서브쿼리
@@ -127,17 +117,10 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .leftJoin(review.user)
                 .where(review.place.id.eq(placeId))
                 .orderBy(review.date.desc())
-                .limit(5)
+                .limit(size + 1)
                 .fetch();
 
-        // hasNext 확인을 위한 전체 리뷰 수 쿼리
-        Long totalReviewsCount = jpaQueryFactory
-                .select(review.count())
-                .from(review)
-                .where(review.place.id.eq(placeId))
-                .fetchOne();
-
-        boolean hasNext = totalReviewsCount != null && totalReviewsCount > size; // 5개 이상의 리뷰가 있는지 확인
+        boolean hasNext = recentReviews.size() == size + 1;
 
         // PlaceDetailResponse를 생성하기 위한 쿼리
         PlaceDetailResponse placeDetailResponse = jpaQueryFactory.select(

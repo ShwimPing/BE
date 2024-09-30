@@ -1,7 +1,5 @@
 package com.shwimping.be.place.application;
 
-import com.shwimping.be.bookmark.domain.BookMark;
-import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponse;
 import com.shwimping.be.place.application.type.SortType;
 import com.shwimping.be.place.domain.Place;
 import com.shwimping.be.place.domain.type.Category;
@@ -45,11 +43,13 @@ public class PlaceService {
         List<SearchPlaceResponse> allSearchResult = placeRepository.findAllByLocationWithDistance(
                 longitude, latitude, maxDistant, categoryList, sortType, keyword, page, size);
 
-        // 전체 데이터 수 카운트
-        long totalCount = placeRepository.countByLocationWithDistance(longitude, latitude, maxDistant, categoryList);
-
         // hasNext 계산: 현재 페이지의 데이터 수가 10개이고 전체 데이터 수가 page가 끝나는 지점보다 클 경우 false
-        boolean hasNext = allSearchResult.size() == 10 && (page + 1) * 10 < totalCount;
+        boolean hasNext = allSearchResult.size() == size + 1;
+
+        // 마지막 원소를 제외한 서브 리스트 생성
+        if (hasNext) {
+            allSearchResult = allSearchResult.subList(0, allSearchResult.size() - 1);
+        }
 
         return SearchPlaceResponseList.of(page, hasNext, longitude, latitude, maxDistant, keyword, sortType,
                 categoryList, allSearchResult);
