@@ -12,7 +12,5 @@ public interface PlaceRepositoryCustom {
             double longitude, double latitude, int maxDistance, List<Category> categoryList, SortType sortType,
             String keyword, long page, long size);
 
-    Long countByLocationWithDistance(double longitude, double latitude, int maxDistant, List<Category> categoryList);
-
     PlaceDetailWithReviews findPlaceDetail(Long placeId, Long userId, Long size);
 }

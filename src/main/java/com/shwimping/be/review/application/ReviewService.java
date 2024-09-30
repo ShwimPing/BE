@@ -33,12 +33,17 @@ public class ReviewService {
 
     public ReviewSimpleResponseList getReviewSimpleResponse(Long placeId, Long lastReviewId, Long size) {
 
-        List<ReviewSimpleResponse> reviewSimpleResponse =
+        List<ReviewSimpleResponse> reviewSimpleResponseList =
                 reviewRepository.getReviewSimpleResponse(placeId, lastReviewId, size);
 
-        Boolean hasNext = reviewRepository.hasNext(placeId, lastReviewId, size);
+        boolean hasNext = reviewSimpleResponseList.size() == size + 1;
 
-        return ReviewSimpleResponseList.of(hasNext, reviewSimpleResponse);
+        // 마지막 원소를 제외한 서브 리스트 생성
+        if (hasNext) {
+            reviewSimpleResponseList = reviewSimpleResponseList.subList(0, reviewSimpleResponseList.size() - 1);
+        }
+
+        return ReviewSimpleResponseList.of(hasNext, reviewSimpleResponseList);
     }
 
     public ReviewSimpleResponseList getMyReview(Long userId, Long lastReviewId, Long size) {
