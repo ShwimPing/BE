@@ -2,6 +2,7 @@ package com.shwimping.be.user.domain;
 
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
 import com.shwimping.be.user.domain.type.Provider;
+import com.shwimping.be.user.domain.type.Role;
 import com.shwimping.be.user.dto.request.SaveProfileRequest;
 import com.shwimping.be.user.dto.request.UpdateProfileRequest;
 import jakarta.persistence.Column;
@@ -16,6 +17,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.shwimping.be.user.domain.type.Role.GUEST;
+import static com.shwimping.be.user.domain.type.Role.USER;
 
 @Table(name = "users")
 @Getter
@@ -56,9 +60,13 @@ public class User {
     @Column(name = "now_location", nullable = false)
     private String nowLocation;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     @Builder
     public User(String nickname, String fcmToken, Boolean isAlarmAllowed, String profileImageUrl, String email,
-                String password, Provider provider, String socialId, String nowLocation) {
+                String password, Provider provider, String socialId, String nowLocation, Role role) {
         this.nickname = nickname;
         this.fcmToken = fcmToken;
         this.isAlarmAllowed = isAlarmAllowed;
@@ -68,6 +76,7 @@ public class User {
         this.provider = provider;
         this.socialId = socialId;
         this.nowLocation = nowLocation;
+        this.role = role;
     }
 
     public static User of(OAuthInfoResponse oAuthInfoResponse, String cdnDomain) {
@@ -80,6 +89,7 @@ public class User {
                 .isAlarmAllowed(true)
                 .profileImageUrl(cdnDomain + "/profile/ic_profile.svg")
                 .nowLocation("temporal")
+                .role(GUEST)
                 .build();
     }
 
@@ -90,6 +100,7 @@ public class User {
     public void saveProfile(SaveProfileRequest request, String profileImageUrl) {
         this.fcmToken = request.fcmToken();
         this.nickname = request.nickname();
+        this.role = USER;
 
         if (!profileImageUrl.isEmpty()) {
             this.profileImageUrl = profileImageUrl;

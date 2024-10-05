@@ -4,6 +4,7 @@ import com.shwimping.be.auth.application.AuthService;
 import com.shwimping.be.auth.dto.request.LoginRequest;
 import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
+import com.shwimping.be.auth.dto.response.ReissueResponse;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.user.domain.type.Provider;
 import com.shwimping.be.user.dto.request.CreateUserRequest;
@@ -104,7 +105,7 @@ public class AuthController {
     public ResponseEntity<ResponseTemplate<Object>> reIssueToken(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION) String refreshToken) {
 
-        LoginResponse response = authService.reIssueToken(refreshToken);
+        ReissueResponse response = authService.reIssueToken(refreshToken);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
