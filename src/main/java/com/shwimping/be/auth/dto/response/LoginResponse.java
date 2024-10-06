@@ -10,7 +10,7 @@ public record LoginResponse(
         Role role,
         String accessToken
 ) {
-    public static LoginResponse from(Tokens token, User user) {
+    public static LoginResponse of(Tokens token, User user) {
         return LoginResponse.builder()
                 .role(user.getRole())
                 .accessToken(token.accessToken())

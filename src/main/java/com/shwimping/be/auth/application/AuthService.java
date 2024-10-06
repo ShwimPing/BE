@@ -74,7 +74,7 @@ public class AuthService {
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
         response.setHeader("Refresh-Token", tokens.refreshToken());
 
-        return LoginResponse.from(tokens, user);
+        return LoginResponse.of(tokens, user);
     }
 
     // AccessToken 재발급
