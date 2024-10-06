@@ -15,6 +15,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static com.shwimping.be.user.domain.type.Role.ADMIN;
+import static com.shwimping.be.user.domain.type.Role.USER;
+
 @Slf4j
 @RequiredArgsConstructor
 @Order(1)
@@ -45,6 +48,7 @@ public class UserInitializer implements ApplicationRunner {
                     .password(passwordEncoder.encode("adminPassword"))
                     .provider(Provider.SELF)
                     .nowLocation("nowLocation")
+                    .role(ADMIN)
                     .build();
 
             User DUMMY_USER1 = User.builder()
@@ -56,6 +60,7 @@ public class UserInitializer implements ApplicationRunner {
                     .password(passwordEncoder.encode("user1Password"))
                     .provider(Provider.SELF)
                     .nowLocation("nowLocation")
+                    .role(USER)
                     .build();
 
             User DUMMY_USER2 = User.builder()
@@ -67,6 +72,7 @@ public class UserInitializer implements ApplicationRunner {
                     .password(passwordEncoder.encode("user2Password"))
                     .provider(Provider.SELF)
                     .nowLocation("nowLocation")
+                    .role(USER)
                     .build();
 
             userList.add(DUMMY_ADMIN);

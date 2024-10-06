@@ -8,6 +8,7 @@ import com.shwimping.be.auth.dto.request.LoginRequest;
 import com.shwimping.be.auth.dto.request.OAuthLoginRequest;
 import com.shwimping.be.auth.dto.response.LoginResponse;
 import com.shwimping.be.auth.dto.response.OAuthInfoResponse;
+import com.shwimping.be.auth.dto.response.ReissueResponse;
 import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.domain.User;
 import com.shwimping.be.user.domain.type.Provider;
@@ -73,14 +74,14 @@ public class AuthService {
         Tokens tokens = jwtTokenProvider.generateToken(getJwtUserDetails(user.getId()));
         response.setHeader("Refresh-Token", tokens.refreshToken());
 
-        return LoginResponse.from(tokens);
+        return LoginResponse.of(tokens, user);
     }
 
     // AccessToken 재발급
-    public LoginResponse reIssueToken(String refreshToken) {
+    public ReissueResponse reIssueToken(String refreshToken) {
         if (jwtTokenProvider.validateToken(refreshToken) == VALID_JWT) {
             Long userId = jwtTokenProvider.getJwtUserDetails(refreshToken).userId();
-            return LoginResponse.from(jwtTokenProvider.generateToken(getJwtUserDetails(userId)));
+            return ReissueResponse.from(jwtTokenProvider.generateToken(getJwtUserDetails(userId)));
         } else {
             throw new InvalidTokenException(INVALID_REFRESH_TOKEN);
         }
