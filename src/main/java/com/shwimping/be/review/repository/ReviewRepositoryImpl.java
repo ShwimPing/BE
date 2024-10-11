@@ -4,6 +4,7 @@ import static com.shwimping.be.review.domain.QReview.review;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.shwimping.be.review.dto.response.MyReviewResponse;
 import com.shwimping.be.review.dto.response.ReviewSimpleResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,18 +36,18 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     @Override
-    public List<ReviewSimpleResponse> getMyFirstReview(Long userId) {
+    public List<MyReviewResponse> getMyFirstReview(Long userId) {
         // 리뷰를 최신 5개만 가져오기 위한 서브쿼리
-        return jpaQueryFactory.select(Projections.constructor(ReviewSimpleResponse.class,
+        return jpaQueryFactory.select(Projections.constructor(MyReviewResponse.class,
                         review.id,
-                        review.user.nickname,
+                        review.place.category,
+                        review.place.name,
                         review.content,
                         review.rating,
                         review.date,
                         review.reviewImageUrl
                 ))
                 .from(review)
-                .leftJoin(review.user)
                 .where(review.user.id.eq(userId))
                 .orderBy(review.date.desc())
                 .limit(5)
@@ -54,11 +55,12 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     @Override
-    public List<ReviewSimpleResponse> getMyReview(Long userId, Long lastReviewId, Long size) {
+    public List<MyReviewResponse> getMyReview(Long userId, Long lastReviewId, Long size) {
         return jpaQueryFactory.select(
-                        Projections.constructor(ReviewSimpleResponse.class,
+                        Projections.constructor(MyReviewResponse.class,
                                 review.id,
-                                review.user.nickname,
+                                review.place.category,
+                                review.place.name,
                                 review.content,
                                 review.rating,
                                 review.date,

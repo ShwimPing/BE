@@ -5,6 +5,8 @@ import com.shwimping.be.global.application.NCPStorageService;
 import com.shwimping.be.place.application.PlaceService;
 import com.shwimping.be.place.domain.Place;
 import com.shwimping.be.review.dto.request.ReviewUploadRequest;
+import com.shwimping.be.review.dto.response.MyReviewResponse;
+import com.shwimping.be.review.dto.response.MyReviewResponseList;
 import com.shwimping.be.review.dto.response.ReviewSimpleResponse;
 import com.shwimping.be.review.dto.response.ReviewSimpleResponseList;
 import com.shwimping.be.review.exception.CanNotDeleteReviewException;
@@ -46,14 +48,14 @@ public class ReviewService {
         return ReviewSimpleResponseList.of(hasNext, reviewSimpleResponseList);
     }
 
-    public ReviewSimpleResponseList getMyReview(Long userId, Long lastReviewId, Long size) {
+    public MyReviewResponseList getMyReview(Long userId, Long lastReviewId, Long size) {
 
-        List<ReviewSimpleResponse> reviewSimpleResponse = (lastReviewId == 0)
+        List<MyReviewResponse> reviewSimpleResponse = (lastReviewId == 0)
                 ? reviewRepository.getMyFirstReview(userId) : reviewRepository.getMyReview(userId, lastReviewId, size);
 
         Boolean hasNext = reviewRepository.hasNextMyReview(userId, lastReviewId, size);
 
-        return ReviewSimpleResponseList.of(hasNext, reviewSimpleResponse);
+        return MyReviewResponseList.of(hasNext, reviewSimpleResponse);
     }
 
     @Transactional
