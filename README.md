@@ -16,7 +16,7 @@
 ![image](https://github.com/user-attachments/assets/f64cc8f3-83d5-4ba1-9856-01a726d3fcb7)
 
 ### 🛠️ Infra Structure
-![image](https://github.com/user-attachments/assets/c303fa7b-7cd3-4aa2-843d-9e18193cc707)
+![shwimping 인프라 drawio](https://github.com/user-attachments/assets/097f9408-da28-489d-a674-219306f10a47)
 
 ## 🗂️ Project Structure
 
