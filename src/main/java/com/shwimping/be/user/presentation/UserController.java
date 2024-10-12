@@ -4,7 +4,7 @@ import com.shwimping.be.bookmark.application.BookMarkService;
 import com.shwimping.be.bookmark.dto.response.BookMarkPlaceResponseList;
 import com.shwimping.be.global.dto.ResponseTemplate;
 import com.shwimping.be.review.application.ReviewService;
-import com.shwimping.be.review.dto.response.ReviewSimpleResponseList;
+import com.shwimping.be.review.dto.response.MyReviewResponseList;
 import com.shwimping.be.user.application.UserService;
 import com.shwimping.be.user.dto.request.UpdateProfileRequest;
 import com.shwimping.be.user.dto.response.MypageResponse;
@@ -82,7 +82,7 @@ public class UserController {
             @RequestParam Long lastReviewId,
             @RequestParam(defaultValue = "5") Long size) {
 
-        ReviewSimpleResponseList responseList = reviewService.getMyReview(userId, lastReviewId, size);
+        MyReviewResponseList responseList = reviewService.getMyReview(userId, lastReviewId, size);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
