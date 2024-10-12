@@ -22,6 +22,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         Projections.constructor(ReviewSimpleResponse.class,
                                 review.id,
                                 review.user.nickname,
+                                review.user.profileImageUrl,
                                 review.content,
                                 review.rating,
                                 review.date,

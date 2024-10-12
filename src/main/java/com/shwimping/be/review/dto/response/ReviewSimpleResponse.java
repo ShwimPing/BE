@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record ReviewSimpleResponse(
         Long reviewId,
         String writer,
+        String profileImageUrl,
         String content,
         BigDecimal rating,
         @JsonFormat(pattern = "yyyy-MM-dd")

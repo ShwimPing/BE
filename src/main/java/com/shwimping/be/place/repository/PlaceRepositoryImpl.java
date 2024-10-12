@@ -108,6 +108,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .select(Projections.constructor(ReviewSimpleResponse.class,
                         review.id,
                         review.user.nickname,
+                        review.user.profileImageUrl,
                         review.content,
                         review.rating,
                         review.date,
