@@ -1,8 +1,7 @@
-## 💘 팀원 
+## 🚀 팀원 
 | **이동영** | **이현지** |
 | :------: |  :------: |
 | [<img src="https://avatars.githubusercontent.com/u/43364585?v=4" height=150 width=150> <br/> @leedy3838](https://github.com/leedy3838) | [<img src="https://avatars.githubusercontent.com/u/110108243?v=4" height=150 width=150> <br/> @Amepistheo](https://github.com/Amepistheo) |
-| `지도 관련 기능, 인프라 구축, 모니터링 서버 구축`  | `로그인/회원가입, 카드뉴스 관련 기능, 알림 관련 기능` |
 
 ## 🔧 Tech Stack
 - **Language**: Java 17
