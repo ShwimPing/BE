@@ -8,7 +8,7 @@ public interface ReviewRepositoryCustom {
 
     List<ReviewSimpleResponse> getReviewSimpleResponse(Long placeId, Long lastReviewId, Long size);
 
-    List<MyReviewResponse> getMyFirstReview(Long userId);
+    List<MyReviewResponse> getMyFirstReview(Long userId, Long size);
 
     List<MyReviewResponse> getMyReview(Long userId, Long lastReviewId, Long size);
 

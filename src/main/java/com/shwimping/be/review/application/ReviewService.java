@@ -51,7 +51,7 @@ public class ReviewService {
     public MyReviewResponseList getMyReview(Long userId, Long lastReviewId, Long size) {
 
         List<MyReviewResponse> reviewSimpleResponse = (lastReviewId == 0)
-                ? reviewRepository.getMyFirstReview(userId) : reviewRepository.getMyReview(userId, lastReviewId, size);
+                ? reviewRepository.getMyFirstReview(userId, size) : reviewRepository.getMyReview(userId, lastReviewId, size);
 
         Boolean hasNext = reviewRepository.hasNextMyReview(userId, lastReviewId, size);
 

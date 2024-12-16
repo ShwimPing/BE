@@ -37,7 +37,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     }
 
     @Override
-    public List<MyReviewResponse> getMyFirstReview(Long userId) {
+    public List<MyReviewResponse> getMyFirstReview(Long userId, Long size) {
         // 리뷰를 최신 5개만 가져오기 위한 서브쿼리
         return jpaQueryFactory.select(Projections.constructor(MyReviewResponse.class,
                         review.id,
@@ -51,7 +51,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .from(review)
                 .where(review.user.id.eq(userId))
                 .orderBy(review.date.desc())
-                .limit(5)
+                .limit(size)
                 .fetch();
     }
 
