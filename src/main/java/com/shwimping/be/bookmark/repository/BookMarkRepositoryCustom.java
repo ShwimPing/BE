@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BookMarkRepositoryCustom {
 
-    List<BookMarkPlaceResponse> getBookMarkList(Long userId, Long lastBookMarkId, Long size);
+    List<BookMarkPlaceResponse> getMyFirstBookMark(Long userId, Long size);
 
-    Boolean hasNext(Long userId, Long lastBookMarkId, Long size);
+    List<BookMarkPlaceResponse> getBookMarkList(Long userId, Long lastBookMarkId, Long size);
 }
