@@ -38,7 +38,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
     @Override
     public List<MyReviewResponse> getMyFirstReview(Long userId, Long size) {
-        // 리뷰를 최신 5개만 가져오기 위한 서브쿼리
         return jpaQueryFactory.select(Projections.constructor(MyReviewResponse.class,
                         review.id,
                         review.place.category,
@@ -50,8 +49,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 ))
                 .from(review)
                 .where(review.user.id.eq(userId))
-                .orderBy(review.date.desc())
-                .limit(size)
+                .orderBy(review.id.desc())
+                .limit(size + 1)
                 .fetch();
     }
 
@@ -71,15 +70,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 .from(review)
                 .where(review.user.id.eq(userId), review.id.lt(lastReviewId)) // lastReviewId를 기준으로 필터링
                 .orderBy(review.id.desc())
-                .limit(size) // 가져올 리뷰 수 제한
+                .limit(size + 1) // 가져올 리뷰 수 제한
                 .fetch();
-    }
-
-    @Override
-    public Boolean hasNextMyReview(Long userId, Long lastReviewId, Long size) {
-        return jpaQueryFactory.selectOne()
-                .from(review)
-                .where(review.user.id.eq(userId), review.id.lt(lastReviewId - size))
-                .fetchFirst() != null;
     }
 }

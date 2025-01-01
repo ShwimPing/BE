@@ -9,6 +9,4 @@ public interface BookMarkRepositoryCustom {
     List<BookMarkPlaceResponse> getMyFirstBookMark(Long userId, Long size);
 
     List<BookMarkPlaceResponse> getBookMarkList(Long userId, Long lastBookMarkId, Long size);
-
-    Boolean hasNext(Long userId, Long lastBookMarkId, Long size);
 }

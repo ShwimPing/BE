@@ -20,7 +20,6 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
 
     @Override
     public List<BookMarkPlaceResponse> getMyFirstBookMark(Long userId, Long size) {
-        // 리뷰를 최신 5개만 가져오기 위한 서브쿼리
         return queryFactory.select(
                         Projections.constructor(BookMarkPlaceResponse.class,
                                 bookMark.id,              // bookmarkId
@@ -40,7 +39,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                 .where(bookMark.user.id.eq(userId))
                 .groupBy(bookMark.id) // 그룹화 추가
                 .orderBy(bookMark.id.desc())         // 내림차순 정렬
-                .limit(size)                          // 제한
+                .limit(size + 1)                          // 제한
                 .fetch();
     }
 
@@ -66,17 +65,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                         bookMark.id.lt(lastBookMarkId)) // 마지막 북마크 ID 필터
                 .groupBy(bookMark.id) // 그룹화 추가
                 .orderBy(bookMark.id.desc())         // 내림차순 정렬
-                .limit(size)                          // 제한
+                .limit(size + 1)                          // 제한
                 .fetch();
-    }
-
-
-
-    @Override
-    public Boolean hasNext(Long userId, Long lastBookMarkId, Long size) {
-        return queryFactory.selectOne()
-                .from(bookMark)
-                .where(bookMark.user.id.eq(userId), bookMark.id.lt(lastBookMarkId - size))
-                .fetchFirst() != null;
     }
 }

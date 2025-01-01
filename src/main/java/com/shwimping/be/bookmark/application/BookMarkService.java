@@ -56,7 +56,11 @@ public class BookMarkService {
         List<BookMarkPlaceResponse> bookMarkList = (lastBookMarkId == 0)
                 ? bookMarkRepository.getMyFirstBookMark(userId, size) : bookMarkRepository.getBookMarkList(userId, lastBookMarkId, size);
 
-        Boolean hasNext = bookMarkRepository.hasNext(userId, lastBookMarkId, size);
+        boolean hasNext = bookMarkList.size() == size + 1;
+
+        if (hasNext) {
+            bookMarkList = bookMarkList.subList(0, bookMarkList.size() - 1);
+        }
 
         return BookMarkPlaceResponseList.of(hasNext, bookMarkList);
     }
