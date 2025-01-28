@@ -91,7 +91,7 @@ dependencies {
 
 	//prometheus, actuator
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'io.micrometer:micrometer-registry-prometheus'
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.10.0'
 
 	// firebase
 	implementation 'com.google.firebase:firebase-admin:8.0.0'
